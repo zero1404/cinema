@@ -24,8 +24,11 @@
   <!-- Notyf -->
   <link type="text/css" href="{{ asset('vendor/notyf/notyf.min.css') }}" rel="stylesheet">
 
-  <!-- Notyf -->
+  <!-- Choices -->
   <link type="text/css" href="{{ asset('vendor/choices/choices.min.css') }}" rel="stylesheet">
+  
+  <!-- Time picker -->
+  <link type="text/css" href="{{ asset('vendor/jquery-timepicker/jquery.timepicker.css') }}" rel="stylesheet">
 
   <!-- Volt CSS -->
   <link type="text/css" href="{{ asset('admin/css/volt.css') }}" rel="stylesheet">

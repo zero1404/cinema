@@ -51,10 +51,16 @@ class MovieController extends Controller
             'description.string' => 'Mô tả phải là chuỗi kí tự',
             'images.required' => 'Ảnh không được bỏ trống',
             'images.string' => 'Ảnh phải là chuỗi kí tự',
+            'trailer.string' => 'Trailer không được bỏ trống',
+            'trailer.string' => 'Trailer phải là chuỗi kí tự',
             'duaration.required' => 'Thời lượng không được bỏ trống',
             'duaration.string' => 'Thời lượng phải là chuỗi',
+            'director.required' => 'Đạo diễn không được bỏ trống',
+            'director.string' => 'Đạo diễn phải là chuỗi',
             'release_date.required' => 'Ngày phát hành không được bỏ trống',
-            'release_date.date' => 'Ngày phát hành không hợp lệ'
+            'release_date.date' => 'Ngày phát hành không hợp lệ',
+            'status.required' => 'Chưa chọn trạng thái',
+            'status.in' => 'Trạng thái không hợp lệ',
         ];
 
         $this->validate($request, [
@@ -64,9 +70,11 @@ class MovieController extends Controller
             'trailer' => 'required|string',
             'duaration' => 'required|string',
             'release_date' => 'required|date',
-            'category_id' => 'required|exists:categories,category_id',
+            'director' => 'required|string',
+            'category_ids' => 'required|exists:categories,category_id',
+            'actor_ids' => 'required|exists:actors,actor_id',
             'language_id' => 'required|exists:languages,language_id',
-            'actor_ids' => 'required'
+            'status' => 'required:|in:active,inactive'
         ], $messages);
 
         $data = $request->all();
@@ -74,14 +82,16 @@ class MovieController extends Controller
         $count = Movie::where('slug', $slug)->count();
 
         if ($count > 0) {
-            // $slug += '-' . $count;
+            $slug = $slug. '-' . $count;
         }
 
         $data['slug'] = $slug;
-        $status = Movie::create($data);
+        $createdMovie = Movie::create($data);
 
-        if ($status) {
-            $status->actors()->attach($data["actor_ids"]);
+        if ($createdMovie) {
+            $createdMovie->actors()->attach($data["actor_ids"]);
+            $createdMovie->categories()->attach($data["category_ids"]);
+
             request()->session()->flash('success', 'Tạo phim thành công.');
         } else {
             request()->session()->flash('error', 'Có lỗi xảy ra, vui lòng thử lại!');
@@ -104,11 +114,7 @@ class MovieController extends Controller
             return abort(404, 'Mã phim không tồn tại');
         }
 
-        $languages = Language::all();
-        $categories = Category::all();
-        $actors = Actor::all();
-
-        return view('dashboard.movie.detail', compact('movie', 'languages', 'categories', 'actors'));
+        return view('dashboard.movie.detail', compact('movie'));
     }
 
     /**
@@ -122,10 +128,14 @@ class MovieController extends Controller
         $movie = Movie::find($id);
 
         if (!$movie) {
-            return abort(404, 'Mã diễn viên không tồn tại');
+            return abort(404, 'Mã phim không tồn tại');
         }
 
-        return view('dashboard.movie.edit', compact('movie'));
+        $languages = Language::all();
+        $categories = Category::all();
+        $actors = Actor::all();
+
+        return view('dashboard.movie.edit', compact('movie', 'languages', 'categories', 'actors'));
     }
 
     /**
@@ -137,7 +147,58 @@ class MovieController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $movie = Movie::find($id);
+
+        if (!$movie) {
+            return abort(404, 'Mã phim không tồn tại');
+        }
+
+        $messages = [
+            'title.required' => 'Tiêu đề không được bỏ trống',
+            'title.string' => 'Tiêu đề phải là chuỗi kí tự',
+            'title.max' => 'Tiêu đề không được lớn hơn 255 kí tự',
+            'description.required' => 'Mô tả không được bỏ trống',
+            'description.string' => 'Mô tả phải là chuỗi kí tự',
+            'images.required' => 'Ảnh không được bỏ trống',
+            'images.string' => 'Ảnh phải là chuỗi kí tự',
+            'trailer.string' => 'Trailer không được bỏ trống',
+            'trailer.string' => 'Trailer phải là chuỗi kí tự',
+            'duaration.required' => 'Thời lượng không được bỏ trống',
+            'duaration.string' => 'Thời lượng phải là chuỗi',
+            'director.required' => 'Đạo diễn không được bỏ trống',
+            'director.string' => 'Đạo diễn phải là chuỗi',
+            'release_date.required' => 'Ngày phát hành không được bỏ trống',
+            'release_date.date' => 'Ngày phát hành không hợp lệ',
+            'status.required' => 'Chưa chọn trạng thái',
+            'status.in' => 'Trạng thái không hợp lệ',
+        ];
+
+        $this->validate($request, [
+            'title' => 'required|string|min:1|max:255',
+            'description' => 'required|string',
+            'images' => 'required|string',
+            'trailer' => 'required|string',
+            'duaration' => 'required|string',
+            'release_date' => 'required|date',
+            'director' => 'required|string',
+            'category_ids' => 'required|exists:categories,category_id',
+            'actor_ids' => 'required|exists:actors,actor_id',
+            'language_id' => 'required|exists:languages,language_id',
+            'status' => 'required:|in:active,inactive'
+        ], $messages);
+
+        $data = $request->all();
+        $updatedMovie = $movie->fill($data)->save();
+
+        if ($updatedMovie) {
+            $movie->actors()->sync($data["actor_ids"]);
+            $movie->categories()->sync($data["category_ids"]);
+            request()->session()->flash('success', 'Cập nhật phim thành công');
+        } else {
+            request()->session()->flash('error', 'Có lỗi xảy ra, vui lòng thử lại!');
+        }
+
+        return redirect()->route('movie.index');
     }
 
     /**
@@ -151,10 +212,12 @@ class MovieController extends Controller
         $movie = Movie::find($id);
 
         if (!$movie) {
-            return abort(404, 'Mã diễn viên không tồn tại');
+            return abort(404, 'Mã phim không tồn tại');
         }
 
         try {
+            $movie->categories()->detach();
+            $movie->actors()->detach();
             $status = $movie->delete();
             if ($status) {
                 request()->session()->flash('success', 'Đã xoá phim thành công.');

@@ -30,18 +30,15 @@ $columns = [
   <tr>
     <td>{{ $movie->movie_id }}</td>
     <td>
-      @if ($movie->images)
-      @php
-      $photo = explode(',', $movie->images);
-      @endphp
-      <img src="{{ $photo[0] }}" class="img-fluid zoom" style="max-width:80px" alt="{{ $movie->photo }}">
-      @else
-      <img src="{{ asset('admin/img/thumbnail-default.jpg') }}" class="img-fluid" style="max-width:80px"
+      <img src="{{ Helpers::getMovieImage($movie->images) }}" class="img-fluid" style="max-width:80px"
         alt="{{ $movie->title }}">
-      @endif
     </td>
     <td>{{ $movie->title }}</td>
-    <td>{{ $movie->category->title }}</td>
+    <td>
+      @foreach($movie->categories as $index => $category)
+        {{$category->title}} {{$index < count($movie->categories) - 1 ? ',' : '' }}
+      @endforeach
+    </td>
     <td>
       @if ($movie->status == 'active')
       <span class="badge badge-sm bg-success ms-1">Hiển thị</span>

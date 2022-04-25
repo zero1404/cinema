@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Room;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -15,21 +16,6 @@ use Illuminate\Support\Facades\Auth;
 */
 
 Route::get('/', 'HomeController@index')->name('home');
-
-Route::group(['as' => 'api.'], function () {
-    // Address
-    Route::get('/address/provinces', 'AddressController@getProvinces')->name('get-list-provinces');
-    Route::get('/address/districts/{id}', 'AddressController@getDistricts')->name('get-list-districts');
-    Route::get('/address/wards/{id}', 'AddressController@getWards')->name('get-list-wards');
-
-    Route::group(['middleware' => ['auth']], function () {
-        // Cart
-        Route::post('/apply-coupon', 'HomeController@applyCoupon')->name('apply-coupon');
-        Route::get('/cart/{id}', 'CartController@addToCart')->name('add-cart');
-        Route::put('/cart/{id}', 'CartController@updateCart')->name('update-cart');
-        Route::delete('/cart/{id}', 'CartController@removeCart')->name('remove-cart');
-    });
-});
 
 Route::group(['as' => 'shop.'], function () {
     // Home
@@ -96,6 +82,9 @@ Route::group(['prefix' => '/dashboard', 'middleware' => ['auth', 'dashboard.acce
     Route::post('/notification/mark-as-read', 'NotificationController@markAsRead')->name('dashboard.notification.mark-as-read');
     Route::post('/notification/destroy', 'NotificationController@destroy')->name('dashboard.notification.destroy');
 
+    Route::get('/show/choose-movie', 'ShowController@chooseMovie')->name('show.choose.movie');
+    Route::get('/show/{id}/create', 'ShowController@createShow')->name('show.create.movie');
+
     Route::resources([
         'category' => 'CategoryController',
         'order' => 'OrderController',
@@ -105,8 +94,9 @@ Route::group(['prefix' => '/dashboard', 'middleware' => ['auth', 'dashboard.acce
         'language' => 'LanguageController',
         'actor' => 'ActorController',
         'seat' => 'SeatController',
-        'type-seat' => 'TypeSeatController',
+        'room' => 'RoomController',
         'show' => 'ShowController',
+        'time-slot' => 'TimeSlotController',
         'user' => 'UserController',
     ]);
 });

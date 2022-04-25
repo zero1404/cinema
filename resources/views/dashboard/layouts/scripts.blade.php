@@ -31,8 +31,11 @@
 <!-- Notyf -->
 <script src="{{ asset('vendor/notyf/notyf.min.js') }}"></script>
 
-<!-- Notyf -->
+<!-- Choices -->
 <script src="{{ asset('vendor/choices/choices.min.js') }}"></script>
+
+<!-- Time Picker -->
+<script src="{{ asset('vendor/jquery-timepicker/jquery.timepicker.js') }}"></script>
 
 <!-- Simplebar -->
 <script src="{{ asset('vendor/simplebar/dist/simplebar.min.js') }}"></script>

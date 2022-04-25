@@ -23,16 +23,22 @@ $breadcrumbs = [
       <div class="col">
         <x-Dashboard.Forms.Input name="Tiêu đề" property="title" type="text" placeholder="Nhập tiêu đề" value="{{ old('title') }}" />
       </div>
-      <div class="col">
-        <x-Dashboard.Forms.Input name="Thời lượng" property="duaration" type="text" placeholder="Nhập thời lượng"
-        value="{{old('duaration')}}" />
-        <x-Dashboard.Forms.Input name="Trailer" property="trailer" type="text" placeholder="Nhập link trailer"
-        value="{{old('trailer')}}" />
-      </div>
     </div>
 
     <x-Dashboard.Forms.Textarea name=" Mô tả" property="description" value="{{ old('description') }}"
       placeholder="Nhập mô tả" rows="5" />
+
+    <div class="row">
+      <div class="col">
+        <x-Dashboard.Forms.Input name="Thời lượng" property="duaration" type="text" placeholder="Nhập thời lượng"
+        value="{{old('duaration')}}" />
+      </div>
+
+      <div class="col">
+        <x-Dashboard.Forms.Input name="Trailer" property="trailer" type="text" placeholder="Nhập link trailer"
+        value="{{old('trailer')}}" />
+      </div>
+    </div>
 
     <div class="row">
       <div class="col">
@@ -47,19 +53,17 @@ $breadcrumbs = [
 
     <div class="row">
       <div class="col">
-        <x-Dashboard.Forms.Select name="Diễn viên" property="actor_ids[]" multiple="true">
-          @foreach ($actors as $actor)
-          <option value="{{ $actor->actor_id }}">{{ $actor->fullname }}</option>
+        <x-Dashboard.Forms.Select name="Danh mục" property="category_ids[]" multiple="true">
+          @foreach ($categories as $category)
+          <option value="{{ $category->category_id }}" {{ in_array($category->category_id, old('category_ids') ?? []) ? 'selected' : '' }}>{{ $category->title }}</option>
           @endforeach
         </x-Dashboard.Forms.Select>
       </div>
-    </div>
 
-    <div class="row">
       <div class="col">
-        <x-Dashboard.Forms.Select name="Danh mục" property="category_id">
-          @foreach ($categories as $category)
-          <option value="{{ $category->category_id }}">{{ $category->title }}</option>
+        <x-Dashboard.Forms.Select name="Diễn viên" property="actor_ids[]" multiple="true">
+          @foreach ($actors as $actor)
+          <option value="{{ $actor->actor_id }}" {{ in_array($actor->actor_id, old('actor_ids') ?? []) ? 'selected' : ''}}>{{ $actor->fullname }}</option>
           @endforeach
         </x-Dashboard.Forms.Select>
       </div>
@@ -69,15 +73,15 @@ $breadcrumbs = [
       <div class="col">
         <x-Dashboard.Forms.Select name="Ngôn Ngữ" property="language_id">
           @foreach ($languages as $language)
-          <option value="{{ $language->language_id }}">{{ $language->name }}</option>
+          <option value="{{ $language->language_id }}" {{ old('language_id') == $language->language_id ? 'selected' : ''}}>{{ $language->name }}</option>
           @endforeach
         </x-Dashboard.Forms.Select>
       </div>
 
       <div class="col">
         <x-Dashboard.Forms.Select name="Trạng thái" property="status">
-          <option value="active">Hiển thị</option>
-          <option value="inactive">Ẩn</option>
+          <option value="active" {{ old('status') == 'active' ? 'selected' : '' }}>Hiển thị</option>
+          <option value="inactive" {{ old('status') == 'inactive' ? 'selected' : '' }}>Ẩn</option>
         </x-Dashboard.Forms.Select>
       </div>
     </div>
@@ -99,7 +103,7 @@ $breadcrumbs = [
     const choices = new Choices(selectStatusField); 
   }
 
-  const selectCategoryField = d.querySelector('#inputCategory_id');
+  const selectCategoryField = document.getElementById('inputCategory_ids[]');
   if(selectCategoryField) {
     const choices = new Choices(selectCategoryField); 
   }

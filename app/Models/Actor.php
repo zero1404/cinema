@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Actor extends Model
 {
     use HasFactory;
+    
     protected $table = 'actors';
     protected $primaryKey = 'actor_id';
     protected $fillable = ['first_name', 'last_name', 'avatar', 'description'];
@@ -20,6 +21,6 @@ class Actor extends Model
     
     public function movies()
     {
-        $this->belongsToMany(Movie::class);
+        $this->belongsToMany(Movie::class, 'movie_actor', 'actor_id', 'movie_id');
     }
 }

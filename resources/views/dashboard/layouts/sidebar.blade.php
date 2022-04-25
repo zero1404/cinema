@@ -1,5 +1,5 @@
 <nav class="navbar navbar-dark navbar-theme-primary px-4 col-12 d-lg-none">
-  <a class="navbar-brand me-lg-5" href="../../index.html">
+  <a class="navbar-brand me-lg-5" href="{{ route('dashboard.index') }}">
     <img class="navbar-brand-dark" src="{{ asset('admin/img/brand/light.svg') }}" alt="logo" />
     <img class="navbar-brand-light" src="{{ asset('admin/img/brand/dark.svg') }}" alt="logo" />
   </a>
@@ -51,7 +51,7 @@
           <span class="sidebar-icon">
             <img src="{{ asset('admin/img/brand/light.svg') }}" height="20" width="20" alt="Volt Logo">
           </span>
-          <span class="mt-1 ms-1 sidebar-text">BOOK STORE</span>
+          <span class="mt-1 ms-1 sidebar-text">CINEMA</span>
         </a>
       </li>
 
@@ -71,7 +71,7 @@
 
       <!-- Heading -->
       <div class="sidebar-heading">
-        SHOP
+        CINEMA
       </div>
       <li class="nav-item {{Route::currentRouteName() == 'order.index' ? 'active' : ''}}">
         <a href="{{route('order.index')}}" class="nav-link">
@@ -83,6 +83,46 @@
             </svg>
           </span>
           <span class="sidebar-text">Đơn hàng</span>
+        </a>
+      </li>
+
+      <li class="nav-item {{Route::currentRouteName() == 'show.index' ? 'active' : ''}}">
+        <a href="{{route('show.index')}}" class="nav-link">
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-xs me-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          </svg>
+          </span>
+          <span class="sidebar-text">Lịch chiếu</span>
+        </a>
+      </li>
+
+      <li class="nav-item {{Route::currentRouteName() == 'room.index' ? 'active' : ''}}">
+        <a href="{{route('room.index')}}" class="nav-link">
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-xs me-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z" />
+          </svg>
+          </span>
+          <span class="sidebar-text">Phòng chiếu</span>
+        </a>
+      </li>
+
+      <li class="nav-item {{Route::currentRouteName() == 'seat.index' ? 'active' : ''}}">
+        <a href="{{route('seat.index')}}" class="nav-link">
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-xs me-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+          </svg>
+          </span>
+          <span class="sidebar-text">Ghế ngồi</i></span>
+        </a>
+      </li>
+
+      <li class="nav-item {{Route::currentRouteName() == 'time-slot.index' ? 'active' : ''}}">
+        <a href="{{route('time-slot.index')}}" class="nav-link">
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-xs me-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          </span>
+          <span class="sidebar-text">Khung Giờ</span>
         </a>
       </li>
 

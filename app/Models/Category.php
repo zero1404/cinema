@@ -8,13 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class Category extends Model
 {
     use HasFactory;
+    
     protected $table = 'categories';
     protected $primaryKey = 'category_id';
     protected $fillable = ['title', 'description', 'slug'];
 
     public function movies()
     {
-        return $this->hasMany('App\Models\Movie', 'category_id', 'category_id')->where('status', 'active');
+        return $this->belongsToMany(Movie::class, 'movie_category', 'category_id', 'movie_id')->where('status', 'active');
     }
 
     public static function getBySlug($slug)

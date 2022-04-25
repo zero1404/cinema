@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Seat;
 use Illuminate\Http\Request;
+use App\Models\Room;
+use App\Models\Seat;
 
-class seatController extends Controller
+class RoomController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,8 +15,8 @@ class seatController extends Controller
      */
     public function index()
     {
-        $seats = Seat::orderBy('seat_id', 'DESC')->get();
-        return view('dashboard.seat.index', compact('seats'));
+        $rooms = Room::orderBy('room_id', 'DESC')->get();
+        return view('dashboard.room.index', compact('rooms'));
     }
 
     /**
@@ -25,7 +26,8 @@ class seatController extends Controller
      */
     public function create()
     {
-        return view('dashboard.seat.create');
+        $seats = Seat::all();
+        return view('dashboard.room.create', compact('seats'));
     }
 
     /**
@@ -39,23 +41,29 @@ class seatController extends Controller
         $messages = [
             'name.required' => 'Tên không được bỏ trống',
             'name.string' => 'Tên phải là chuỗi kí tự',
-            'name.max' => 'Tên không được lớn hơn 50 kí tự',
+            'total_seat.required' => 'Số ghế không được bỏ trống',
+            'total_seat.integer' => 'Số ghê phải là số nguyên',
+            'seat_id.required' => 'Mã ghế không được bỏ trống',
+            'seat_id.exists' => 'Mã ghế không hợp lệ'
         ];
 
         $this->validate($request, [
-            'name' => 'required|string|max:50',
+            'name' => 'required|string',
+            'total_seat' => 'required|integer',
+            'seat_id' => 'required|exists:seats,seat_id'
         ], $messages);
 
         $data = $request->all();
-        $status = Seat::create($data);
 
-        if ($status) {
-            request()->session()->flash('success', 'Tạo ghế thành công.');
+        $createdRoom = Room::create($data);
+
+        if ($createdRoom) {
+            request()->session()->flash('success', 'Tạo phòng thành công.');
         } else {
             request()->session()->flash('error', 'Có lỗi xảy ra, vui lòng thử lại!');
         }
 
-        return redirect()->route('seat.index');
+        return redirect()->route('room.index');
     }
 
     /**
@@ -66,13 +74,13 @@ class seatController extends Controller
      */
     public function show($id)
     {
-        $seat = Seat::find($id);
+        $room = Room::find($id);
 
-        if (!$seat) {
-            return abort(404, 'Mã ghế không tồn tại');
+        if (!$room) {
+            return abort(404, 'Mã phòng không tồn tại');
         }
 
-        return view('dashboard.seat.detail', compact('seat'));
+        return view('dashboard.room.detail', compact('room'));
     }
 
     /**
@@ -83,13 +91,14 @@ class seatController extends Controller
      */
     public function edit($id)
     {
-        $seat = Seat::find($id);
+        $room = Room::find($id);
 
-        if (!$seat) {
-            return abort(404, 'Mã ghế không tồn tại');
+        if (!$room) {
+            return abort(404, 'Mã phòng không tồn tại');
         }
 
-        return view('dashboard.seat.edit', compact('seat'));
+        $seats = Seat::all();
+        return view('dashboard.room.edit', compact('room', 'seats'));
     }
 
     /**
@@ -101,32 +110,38 @@ class seatController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $seat = Seat::find($id);
+        $room = Room::find($id);
 
-        if (!$seat) {
-            return abort(404, 'Mã ghế không tồn tại');
+        if (!$room) {
+            return abort(404, 'Mã phòng không tồn tại');
         }
 
         $messages = [
             'name.required' => 'Tên không được bỏ trống',
             'name.string' => 'Tên phải là chuỗi kí tự',
-            'name.max' => 'Tên không được lớn hơn 50 kí tự',
+            'total_seat.required' => 'Số ghế không được bỏ trống',
+            'total_seat.integer' => 'Số ghê phải là số nguyên',
+            'seat_id.required' => 'Mã ghế không được bỏ trống',
+            'seat_id.exists' => 'Mã ghế không hợp lệ'
         ];
 
         $this->validate($request, [
-            'name' => 'required|string|max:50',
+            'name' => 'required|string',
+            'total_seat' => 'required|integer',
+            'seat_id' => 'required|exists:seats,seat_id'
         ], $messages);
 
         $data = $request->all();
-        $status = $seat->fill($data)->save();
 
-        if ($status) {
-            request()->session()->flash('success', 'Cập nhật ghế thành công.');
+        $updatedRoom = $room->fill($data)->save();
+
+        if ($updatedRoom) {
+            request()->session()->flash('success', 'Cập nhật phòng thành công.');
         } else {
             request()->session()->flash('error', 'Có lỗi xảy ra, vui lòng thử lại!');
         }
 
-        return redirect()->route('seat.index');
+        return redirect()->route('room.index');
     }
 
     /**
@@ -137,16 +152,16 @@ class seatController extends Controller
      */
     public function destroy($id)
     {
-        $seat = Seat::find($id);
+        $room = Room::find($id);
 
-        if (!$seat) {
-            return abort(404, 'Mã ghế không tồn tại');
+        if (!$room) {
+            return abort(404, 'Mã phòng không tồn tại');
         }
 
         try {
-            $status = $seat->delete();
+            $status = $room->delete();
             if ($status) {
-                request()->session()->flash('success', 'Đã xoá ghế thành công.');
+                request()->session()->flash('success', 'Đã xoá phòng thành công.');
             } else {
                 request()->session()->flash('error', 'Có lỗi xảy ra, vui lòng thử lại!');
             }
@@ -158,6 +173,6 @@ class seatController extends Controller
             }
         }
 
-        return redirect()->route('seat.index');
+        return redirect()->route('room.index');
     }
 }

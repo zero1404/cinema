@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Seat;
+use App\Models\TimeSlot;
 use Illuminate\Http\Request;
 
-class seatController extends Controller
+class TimeSlotController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,8 +14,8 @@ class seatController extends Controller
      */
     public function index()
     {
-        $seats = Seat::orderBy('seat_id', 'DESC')->get();
-        return view('dashboard.seat.index', compact('seats'));
+        $time_slots = TimeSlot::orderBy('time_slot_id', 'DESC')->get();
+        return view('dashboard.time-slot.index', compact('time_slots'));
     }
 
     /**
@@ -25,7 +25,7 @@ class seatController extends Controller
      */
     public function create()
     {
-        return view('dashboard.seat.create');
+        return view('dashboard.time-slot.create');
     }
 
     /**
@@ -37,25 +37,27 @@ class seatController extends Controller
     public function store(Request $request)
     {
         $messages = [
-            'name.required' => 'Tên không được bỏ trống',
-            'name.string' => 'Tên phải là chuỗi kí tự',
-            'name.max' => 'Tên không được lớn hơn 50 kí tự',
+            'time_start.required' => 'Giờ bắt đầu không được bỏ trống',
+            'time_start.string' => 'Giờ bắt đầu phải là chuỗi kí tự',
+            'time_end.required' => 'Giờ kết thúc không được bỏ trống',
+            'time_end.string' => 'Giờ kết thúc phải là chuỗi kí tự',
         ];
 
         $this->validate($request, [
-            'name' => 'required|string|max:50',
+            'time_start' => 'required|string',
+            'time_end' => 'required|string',
         ], $messages);
 
         $data = $request->all();
-        $status = Seat::create($data);
+        $status = TimeSlot::create($data);
 
         if ($status) {
-            request()->session()->flash('success', 'Tạo ghế thành công.');
+            request()->session()->flash('success', 'Tạo khung giờ thành công.');
         } else {
             request()->session()->flash('error', 'Có lỗi xảy ra, vui lòng thử lại!');
         }
 
-        return redirect()->route('seat.index');
+        return redirect()->route('time-slot.index');
     }
 
     /**
@@ -66,13 +68,13 @@ class seatController extends Controller
      */
     public function show($id)
     {
-        $seat = Seat::find($id);
+        $time_slot = TimeSlot::find($id);
 
-        if (!$seat) {
-            return abort(404, 'Mã ghế không tồn tại');
+        if (!$time_slot) {
+            return abort(404, 'Mã khung giờ không tồn tại');
         }
 
-        return view('dashboard.seat.detail', compact('seat'));
+        return view('dashboard.time-slot.detail', compact('time_slot'));
     }
 
     /**
@@ -83,13 +85,13 @@ class seatController extends Controller
      */
     public function edit($id)
     {
-        $seat = Seat::find($id);
+        $time_slot = TimeSlot::find($id);
 
-        if (!$seat) {
-            return abort(404, 'Mã ghế không tồn tại');
+        if (!$time_slot) {
+            return abort(404, 'Mã khung giờ không tồn tại');
         }
 
-        return view('dashboard.seat.edit', compact('seat'));
+        return view('dashboard.time-slot.edit', compact('time_slot'));
     }
 
     /**
@@ -101,32 +103,34 @@ class seatController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $seat = Seat::find($id);
+        $time_slot = TimeSlot::find($id);
 
-        if (!$seat) {
-            return abort(404, 'Mã ghế không tồn tại');
+        if (!$time_slot) {
+            return abort(404, 'Mã khung giờ không tồn tại');
         }
 
         $messages = [
-            'name.required' => 'Tên không được bỏ trống',
-            'name.string' => 'Tên phải là chuỗi kí tự',
-            'name.max' => 'Tên không được lớn hơn 50 kí tự',
+            'time_start.required' => 'Giờ bắt đầu không được bỏ trống',
+            'time_start.string' => 'Giờ bắt đầu phải là chuỗi kí tự',
+            'time_end.required' => 'Giờ kết thúc không được bỏ trống',
+            'time_end.string' => 'Giờ kết thúc phải là chuỗi kí tự',
         ];
 
         $this->validate($request, [
-            'name' => 'required|string|max:50',
+            'time_start' => 'required|string',
+            'time_end' => 'required|string',
         ], $messages);
 
         $data = $request->all();
-        $status = $seat->fill($data)->save();
+        $status = $time_slot->fill($data)->save();
 
         if ($status) {
-            request()->session()->flash('success', 'Cập nhật ghế thành công.');
+            request()->session()->flash('success', 'Cập nhật khung giờ thành công.');
         } else {
             request()->session()->flash('error', 'Có lỗi xảy ra, vui lòng thử lại!');
         }
 
-        return redirect()->route('seat.index');
+        return redirect()->route('time-slot.index');
     }
 
     /**
@@ -137,16 +141,16 @@ class seatController extends Controller
      */
     public function destroy($id)
     {
-        $seat = Seat::find($id);
+        $time_slot = TimeSlot::find($id);
 
-        if (!$seat) {
-            return abort(404, 'Mã ghế không tồn tại');
+        if (!$time_slot) {
+            return abort(404, 'Mã khung giờ không tồn tại');
         }
 
         try {
-            $status = $seat->delete();
+            $status = $time_slot->delete();
             if ($status) {
-                request()->session()->flash('success', 'Đã xoá ghế thành công.');
+                request()->session()->flash('success', 'Đã xoá khung giờ thành công.');
             } else {
                 request()->session()->flash('error', 'Có lỗi xảy ra, vui lòng thử lại!');
             }
@@ -158,6 +162,6 @@ class seatController extends Controller
             }
         }
 
-        return redirect()->route('seat.index');
+        return redirect()->route('time-slot.index');
     }
 }

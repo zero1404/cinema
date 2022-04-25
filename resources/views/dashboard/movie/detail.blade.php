@@ -1,15 +1,15 @@
 @extends('dashboard.layouts.app')
-@section('title', 'Chi Tiết Sản Phẩm')
+@section('title', 'Chi Tiết Phim')
 
 @php
 $breadcrumbs = [
 [
-'name' => 'Danh sách sách',
+'name' => 'Danh sách phim',
 'url' => route('movie.index'),
 'active' => false,
 ],
 [
-'name' => 'Chi tiết sách',
+'name' => 'Chi tiết phim',
 'url' => route('movie.show', $movie->movie_id),
 'active' => true,
 ]
@@ -23,7 +23,7 @@ $breadcrumbs = [
     <div class="col-md-12 mx-auto">
       <div class="card">
         <div class="card-header">
-          <h5 class="mt-2 font-weight-bold text-primary float-left">Sản Phẩm
+          <h5 class="mt-2 font-weight-bold text-primary float-left">Phim
           </h5>
         </div>
         <div class="card-body">
@@ -37,7 +37,7 @@ $breadcrumbs = [
             <tbody>
               <tr>
                 <td>ID</td>
-                <td>{{ $movie->id }}</td>
+                <td>{{ $movie->movie_id }}</td>
               </tr>
               <tr>
                 <td>Ảnh</td>
@@ -61,28 +61,40 @@ $breadcrumbs = [
               </tr>
 
               <tr>
-                <td>Số lượng</td>
-                <td>{{ $movie->quantity }}</td>
+                <td>Thời lượng</td>
+                <td>{{ $movie->duaration }}</td>
               </tr>
 
               <tr>
-                <td>Đã bán</td>
-                <td>{{ $movie->sold }}</td>
+                <td>Trailer</td>
+                <td><a href="{{ $movie->trailer }}" class="btn btn-secondary text-white">Xem</a></td>
               </tr>
 
               <tr>
-                <td>Giá</td>
-                <td>{{ Helpers::formatCurrency($movie->price) }}</td>
+                <td>Ngày phát hành</td>
+                <td>{{ Helpers::formatDate($movie->release_date) }}</td>
               </tr>
 
               <tr>
-                <td>Chiết khấu</td>
-                <td>{{ $movie->discount }} %</td>
+                <td>Đạo diễn</td>
+                <td>{{ $movie->director }}</td>
               </tr>
+
+              <tr>
+                <td>Diễn viên</td>
+                <td>
+                  @foreach($movie->actors as $index => $actor)
+                  {{$actor->fullname}} {{$index < count($movie->actors) - 1 ? ',' : '' }}
+                @endforeach
+                </td>
+              </tr>
+
               <tr>
                 <td>Danh mục</td>
                 <td>
-                  {{ $movie->category->title }}
+                  @foreach($movie->categories as $index => $category)
+                    {{$category->title}} {{$index < count($movie->categories) - 1 ? ',' : '' }}
+                  @endforeach
                 </td>
               </tr>
              

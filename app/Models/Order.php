@@ -9,13 +9,14 @@ use Illuminate\Support\Facades\Auth;
 class Order extends Model
 {
     use HasFactory;
+    
     protected $table = 'orders';
-    protected $fillable = ['firstname', 'lastname', 'address', 'telephone', 'email', 'note', 'discount', 'total', 'status'];
+    protected $fillable = ['first_name', 'last_name', 'telephone', 'email', 'total', 'status'];
     protected $appends = ['fullname'];
 
     public function items()
     {
-        return $this->hasMany('App\Models\OrderDetail', 'order_id', 'id');
+        return $this->hasMany('App\Models\Ticket', 'order_id', 'order_id');
     }
 
     public function user()
@@ -25,7 +26,7 @@ class Order extends Model
 
     public function getFullNameAttribute()
     {
-        return "{$this['lastname']} {$this['firstname']}";
+        return "{$this['last_name']} {$this['first_name']}";
     }
 
     public static function getCountActiveOrder()

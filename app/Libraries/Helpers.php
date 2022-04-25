@@ -1,12 +1,9 @@
 <?php
 
 use App\Models\Cart;
-use App\Models\Product;
+use App\Models\Movie;
 use App\Models\Category;
-use App\Models\Coupon;
 use Carbon\Carbon;
-use Vanthao03596\HCVN\Models\Province;
-use Vanthao03596\HCVN\Models\District;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 
@@ -28,21 +25,12 @@ class Helpers
     return Category::getParentCategories();
   }
 
-  public static function getRandomProduct()
+  public static function getRandomMovie()
   {
-    if (Product::count() > 4) {
-      return Product::all()->random(4);
+    if (Movie::count() > 4) {
+      return Movie::all()->random(4);
     }
-    return Product::all();
-  }
-
-  public static function getCartCount()
-  {
-    $cart = Cart::where('user_id', Auth::id())->where('status', 'active')->first();
-    if (!$cart) {
-      return 0;
-    }
-    return $cart->count;
+    return Movie::all();
   }
 
   public static function generateOrderNumber($last_id)
@@ -106,11 +94,14 @@ class Helpers
     return  env('DEFAULT_AVATAR_URL');
   }
 
-  public static function isValidCoupon($coupon)
+  public static function getMovieImage($path)
   {
-    $now = Carbon::now();
-    $expiration_date = Carbon::parse($coupon->expiration_date);
-    return !($coupon == null || ($coupon->times == 0) || $coupon->status == 'inactive' || $now->gt($expiration_date));
+    if( File::exists($path)) {
+      return  asset($path);
+    }
+
+    if($path) return $path;
+    return env('DEFAULT_MOVIE_URL');
   }
 
   public function formatTimeNotify($time)
