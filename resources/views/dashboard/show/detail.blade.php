@@ -1,16 +1,16 @@
 @extends('dashboard.layouts.app')
-@section('title', 'Chi Tiết Phòng')
+@section('title', 'Chi Tiết Lịch Chiếu')
 
 @php
 $breadcrumbs = [
 [
-'name' => 'Danh sách phòng',
-'url' => route('room.index'),
+'name' => 'Danh sách lịch chiếu',
+'url' => route('show.index'),
 'active' => false,
 ],
 [
-'name' => 'Chi tiết phòng',
-'url' => route('room.show', $room->room_id),
+'name' => 'Chi tiết lịch chiếu',
+'url' => route('show.show', $show->show_id),
 'active' => true,
 ]
 ];
@@ -23,7 +23,7 @@ $breadcrumbs = [
     <div class="col-md-12 mx-auto">
       <div class="card">
         <div class="card-header">
-          <h5 class="mt-2 font-weight-bold text-primary float-left">Phòng
+          <h5 class="mt-2 font-weight-bold text-primary float-left">Lịch Chiếu
           </h5>
         </div>
         <div class="card-body">
@@ -37,29 +37,29 @@ $breadcrumbs = [
             <tbody>
               <tr>
                 <td>ID</td>
-                <td>{{ $room->room_id }}</td>
+                <td>{{ $show->show_id }}</td>
               </tr>
               <tr>
-                <td>Mã</td>
-                <td>{{ $room->name }}</td>
+                <td>Tên Phim</td>
+                <td>{{ $show->movie->title }}</td>
               </tr>
               <tr>
-                <td>Loại Ghế</td>
-                <td>{{ $room->seat->name }}</td>
+                <td>Phòng Chiếu</td>
+                <td>{{ $show->room->name }}</td>
               </tr>
               <tr>
-                <td>Số Ghế</td>
-                <td>{{ $room->total_seat }}</td>
+                <td>Khung Giờ</td>
+                <td>{{ $show->timeSlot->time_start .' - '. $show->timeSlot->time_end }}</td>
               </tr>
               <tr>
                 <td>Ngày tạo</td>
-                <td>{{ $room->created_at->format('d-m-Y') }}
-                  - {{ $room->created_at->format('g: i a') }}</td>
+                <td>{{ $show->created_at->format('d-m-Y') }}
+                  - {{ $show->created_at->format('g: i a') }}</td>
               </tr>
               <tr>
                 <td>Ngày cập nhật</td>
-                <td>{{ $room->updated_at->format('d-m-Y') }}
-                  - {{ $room->updated_at->format('g: i a') }}
+                <td>{{ $show->updated_at->format('d-m-Y') }}
+                  - {{ $show->updated_at->format('g: i a') }}
                 </td>
               </tr>
             </tbody>
@@ -67,7 +67,7 @@ $breadcrumbs = [
 
         </div>
         <div class="card-footer d-flex">
-          <x-Dashboard.Shared.ButtonDetail :id="$room->room_id" edit="room.edit" delete="room.destroy" />
+          <x-Dashboard.Shared.ButtonDetail :id="$show->show_id" edit="show.edit" delete="show.destroy" />
         </div>
       </div>
     </div>

@@ -11,6 +11,8 @@
   <script src="{{ asset('cinema/js/odometer.min.js') }}"></script>
   <script src="{{ asset('cinema/js/viewport.jquery.js') }}"></script>
   <script src="{{ asset('cinema/js/nice-select.js') }}"></script>
+  <script src="{{ asset('cinema/js/notyf.min.js') }}"></script>
   <script src="{{ asset('cinema/js/main.js') }}"></script>
+  <script src="{{ asset('cinema/js/custom.js') }}"></script>
 
   @stack('scripts')

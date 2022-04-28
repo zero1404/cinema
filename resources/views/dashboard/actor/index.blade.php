@@ -30,8 +30,8 @@ $columns = [
     <td>{{ $actor->actor_id }}</td>
     <td>
       <div class="d-flex align-items-center">
-        <img class="rounded-circle" src="{{Helpers::getUserAvatar($actor->avatar)}}" style="max-width:50px"
-          alt="Avatar">
+        <img class="" src="{{Helpers::getUserAvatar($actor->avatar)}}" style="max-width:50px; clip-path: circle();"
+          alt="{{ $actor->fullname }}">
 
         <span class="mx-2">{{ $actor->fullname }}</span>
       </div>

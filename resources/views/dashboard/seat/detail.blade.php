@@ -40,8 +40,16 @@ $breadcrumbs = [
                 <td>{{ $seat->seat_id }}</td>
               </tr>
               <tr>
-                <td>Mã</td>
+                <td>Tên</td>
                 <td>{{ $seat->name }}</td>
+              </tr>
+              <tr>
+                <td>Phòng</td>
+                <td>{{ $seat->room->name }}</td>
+              </tr>
+              <tr>
+                <td>Loại Ghế</td>
+                <td>{{ $seat->typeSeat->name }}</td>
               </tr>
               <tr>
                 <td>Ngày tạo</td>

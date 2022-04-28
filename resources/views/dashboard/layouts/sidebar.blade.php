@@ -73,8 +73,8 @@
       <div class="sidebar-heading">
         CINEMA
       </div>
-      <li class="nav-item {{Route::currentRouteName() == 'order.index' ? 'active' : ''}}">
-        <a href="{{route('order.index')}}" class="nav-link">
+      <li class="nav-item {{Route::currentRouteName() == 'booking.index' ? 'active' : ''}}">
+        <a href="{{route('booking.index')}}" class="nav-link">
           <span class="sidebar-icon">
             <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-xs me-2" fill="none" viewBox="0 0 24 24"
               stroke="currentColor" stroke-width="2">
@@ -82,14 +82,16 @@
                 d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
             </svg>
           </span>
-          <span class="sidebar-text">Đơn hàng</span>
+          <span class="sidebar-text">Đơn đặt</span>
         </a>
       </li>
 
       <li class="nav-item {{Route::currentRouteName() == 'show.index' ? 'active' : ''}}">
         <a href="{{route('show.index')}}" class="nav-link">
-          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-xs me-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-xs me-2" fill="none" viewBox="0 0 24 24"
+            stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
           </svg>
           </span>
           <span class="sidebar-text">Lịch chiếu</span>
@@ -98,27 +100,56 @@
 
       <li class="nav-item {{Route::currentRouteName() == 'room.index' ? 'active' : ''}}">
         <a href="{{route('room.index')}}" class="nav-link">
-          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-xs me-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z" />
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-xs me-2" fill="none" viewBox="0 0 24 24"
+            stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z" />
           </svg>
           </span>
           <span class="sidebar-text">Phòng chiếu</span>
         </a>
       </li>
 
-      <li class="nav-item {{Route::currentRouteName() == 'seat.index' ? 'active' : ''}}">
-        <a href="{{route('seat.index')}}" class="nav-link">
-          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-xs me-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
-          </svg>
+      <li class="nav-item">
+        <span class="nav-link d-flex justify-content-between align-items-center collapsed"
+          data-bs-toggle="collapse" data-bs-target="#submenu-app" aria-expanded="false">
+          <span>
+            <span
+              class="sidebar-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-xs me-2" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+            </svg> 
           </span>
-          <span class="sidebar-text">Ghế ngồi</i></span>
-        </a>
+          <span class="sidebar-text">Ghế Ngồi</span> </span><span class="link-arrow"><svg
+              class="icon icon-sm" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd"
+                d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                clip-rule="evenodd"></path>
+            </svg></span></span>
+        <div class="multi-level collapse" role="list" id="submenu-app" aria-expanded="false" style="">
+          <ul class="flex-column nav">
+
+            <li class="nav-item {{Route::currentRouteName() == 'seat.index' ? 'active' : ''}}">
+              <a class="nav-link" href="{{route('seat.index')}}">
+                <span class="sidebar-text">Ghế</span>
+              </a>
+            </li>
+
+            <li class="nav-item {{Route::currentRouteName() == 'type-seat.index' ? 'active' : ''}}">
+              <a class="nav-link" href="{{route('type-seat.index')}}">
+                <span class="sidebar-text">Loại Ghế</span>
+              </a>
+            </li>
+          </ul>
+        </div>
       </li>
 
       <li class="nav-item {{Route::currentRouteName() == 'time-slot.index' ? 'active' : ''}}">
         <a href="{{route('time-slot.index')}}" class="nav-link">
-          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-xs me-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-xs me-2" fill="none" viewBox="0 0 24 24"
+            stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
           </span>
@@ -137,8 +168,10 @@
       <li class="nav-item {{Route::currentRouteName() == 'movie.index' ? 'active' : ''}}">
         <a href="{{ route('movie.index')}}" class="nav-link">
           <span class="sidebar-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-xs me-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z" />
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-xs me-2" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z" />
             </svg>
           </span>
           <span class="sidebar-text">Phim</span>
@@ -175,8 +208,10 @@
       <li class="nav-item {{Route::currentRouteName() == 'actor.index' ? 'active' : ''}}">
         <a href="{{ route('actor.index')}}" class="nav-link">
           <span class="sidebar-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-xs me-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-xs me-2" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
             </svg>
           </span>
           <span class="sidebar-text">Diễn viên</span>

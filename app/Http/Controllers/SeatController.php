@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Seat;
+use App\Models\Room;
+use App\Models\TypeSeat;
 use Illuminate\Http\Request;
 
 class seatController extends Controller
@@ -25,7 +27,9 @@ class seatController extends Controller
      */
     public function create()
     {
-        return view('dashboard.seat.create');
+        $rooms = Room::all();
+        $type_seats = TypeSeat::all();
+        return view('dashboard.seat.create', compact('rooms', 'type_seats'));
     }
 
     /**
@@ -40,10 +44,16 @@ class seatController extends Controller
             'name.required' => 'Tên không được bỏ trống',
             'name.string' => 'Tên phải là chuỗi kí tự',
             'name.max' => 'Tên không được lớn hơn 50 kí tự',
+            'type_seat_id.required' => 'Mã loại ghế không được bỏ trống',
+            'type_seat_id.exists' => 'Mã loại ghế không hợp lệ',
+            'room_id.required' => 'Mã phòng không được bỏ trống',
+            'room_id.exists' => 'Mã phòng không hợp lệ'
         ];
 
         $this->validate($request, [
             'name' => 'required|string|max:50',
+            'room_id' => 'required|exists:rooms,room_id',
+            'type_seat_id' => 'required|exists:type_seats,type_seat_id',
         ], $messages);
 
         $data = $request->all();
@@ -89,7 +99,9 @@ class seatController extends Controller
             return abort(404, 'Mã ghế không tồn tại');
         }
 
-        return view('dashboard.seat.edit', compact('seat'));
+        $rooms = Room::all();
+        $type_seats = TypeSeat::all();
+        return view('dashboard.seat.edit', compact('seat', 'rooms', 'type_seats'));
     }
 
     /**
@@ -111,10 +123,16 @@ class seatController extends Controller
             'name.required' => 'Tên không được bỏ trống',
             'name.string' => 'Tên phải là chuỗi kí tự',
             'name.max' => 'Tên không được lớn hơn 50 kí tự',
+            'type_seat_id.required' => 'Mã loại ghế không được bỏ trống',
+            'type_seat_id.exists' => 'Mã loại ghế không hợp lệ',
+            'room_id.required' => 'Mã phòng không được bỏ trống',
+            'room_id.exists' => 'Mã phòng không hợp lệ'
         ];
 
         $this->validate($request, [
             'name' => 'required|string|max:50',
+            'room_id' => 'required|exists:rooms,room_id',
+            'type_seat_id' => 'required|exists:type_seats,type_seat_id',
         ], $messages);
 
         $data = $request->all();

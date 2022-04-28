@@ -16,49 +16,51 @@ use Illuminate\Support\Facades\Auth;
 */
 
 Route::get('/', 'HomeController@index')->name('home');
+Route::get('/test', 'HomeController@test')->name('test');
 
-Route::group(['as' => 'shop.'], function () {
+Route::group(['as' => 'cinema.'], function () {
     // Home
     Route::get('/', 'HomeController@index')->name('home');
+    Route::get('/about', 'HomeController@showAbout')->name('about');
     Route::get('/contact', 'HomeController@showContact')->name('contact');
 
     //Category
-    Route::get('/category/{slug}', 'HomeController@productByCategory')->name('product-by-category');
+    Route::get('/category/{slug}', 'HomeController@productByCategory')->name('movie.list.category');
 
-    // Product
-    Route::get('/product', 'HomeController@productList')->name('product-list');
-    Route::get('/search', 'HomeController@productSearch')->name('product-search');
-    Route::get('/product/{slug}', 'HomeController@productDetail')->name('product-detail');
+    // Movie
+    Route::get('/movie', 'HomeController@showListMovie')->name('movie.list');
+    Route::get('/search', 'HomeController@searchMovie')->name('movie.search');
+    Route::get('/movie/{slug}', 'HomeController@showMovieDetail')->name('movie.detail');
 
-    // User
-    Route::get('/user/login', 'HomeController@login')->name('user-login');
-    Route::post('/user/login', 'Auth\LoginController@login');
-    Route::post('/user/logout', 'Auth\LoginController@logout')->name('logout');
-    Route::get('user/register', 'HomeController@register')->name('user-register');
-    Route::post('user/register', 'Auth\RegisterController@register');
+    // Auth
+    Route::get('/user/login', 'HomeController@showLogin')->name('auth.login');
+    Route::get('/user/register', 'HomeController@showRegister')->name('auth.register');
+
 
     Route::group(['middleware' => ['auth']], function () {
-        // Cart
-        Route::get('/cart', 'CartController@getListCart')->name('cart');
-
         // Profile
         Route::get('/profile', 'HomeController@profile')->name('profile');
-        Route::get('/profile/change-password', 'HomeController@changePassword')->name('change-password-profile');
-        Route::post('/profile/update', 'HomeController@updateProfile')->name('update-profile');
-        Route::post('/profile/update-password', 'HomeController@updatePassword')->name('update-profile-password');
-        Route::post('/profile/update-avatar', 'HomeController@updateAvatar')->name('update-profile-avatar');
+        Route::get('/profile/change-password', 'HomeController@changePassword')->name('profile.change-password');
+        Route::post('/profile/update', 'HomeController@updateProfile')->name('profile.update');
+        Route::post('/profile/update-password', 'HomeController@updatePassword')->name('profile.change-password.handle');
+        Route::post('/profile/update-avatar', 'HomeController@updateAvatar')->name('profile.update-avatar.handle');
 
-        // Checkout
-        Route::get('/checkout', 'HomeController@checkout')->name('checkout');
+        // Booking
+        Route::get('booking/{movieId}/choose-show', 'HomeController@chooseShow')->name('booking.choose-show');
+        Route::post('booking/{movieId}/choose-show', 'HomeController@chooseShow')->name('booking.choose-show.handle');
+        Route::get('booking/{movieId}/{showId}/choose-seat', 'HomeController@chooseSeat')->name('booking.choose-seat');
+        Route::post('booking/{movieId}/{showId}/get-seat-ids', 'HomeController@getSeatIds')->name('booking.get-seat-ids');
+        Route::get('booking/payment', 'HomeController@showPayment')->name('booking.payment');
+        Route::post('booking/payment', 'HomeController@payment')->name('booking.payment.handle');
+        Route::get('booking/success', 'HomeController@showBookingSuccess')->name('booking.success');
+        Route::get('booking/failed', 'HomeController@showBookingFailed')->name('booking.failed');
 
         // Order
         Route::post('/order', 'HomeController@order')->name('order');
-        Route::get('/order', 'HomeController@getOrderList')->name('list-ordered');
-        Route::get('/order-success', 'HomeController@orderSuccess')->name('order-success');
-        Route::get('/order/{id}', 'HomeController@getDetailOrder')->name('detail-ordered');
+        Route::get('/order', 'HomeController@getOrderList')->name('order.list');
+        Route::get('/order-success', 'HomeController@orderSuccess')->name('order.success');
+        Route::get('/order/{id}', 'HomeController@getDetailOrder')->name('order.detail');
 
-        // Apply Coupon
-        Route::post('/apply-coupon', 'HomeController@applyCoupon')->name('apply-coupon');
     });
 });
 
@@ -87,13 +89,13 @@ Route::group(['prefix' => '/dashboard', 'middleware' => ['auth', 'dashboard.acce
 
     Route::resources([
         'category' => 'CategoryController',
-        'order' => 'OrderController',
-        'product' => 'ProductController',
+        'booking' => 'BookingController',
         'movie' => 'MovieController',
         'show' => 'ShowController',
         'language' => 'LanguageController',
         'actor' => 'ActorController',
         'seat' => 'SeatController',
+        'type-seat' => 'TypeSeatController',
         'room' => 'RoomController',
         'show' => 'ShowController',
         'time-slot' => 'TimeSlotController',

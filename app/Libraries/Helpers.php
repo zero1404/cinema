@@ -1,10 +1,9 @@
 <?php
 
-use App\Models\Cart;
 use App\Models\Movie;
+use App\Models\Booking;
 use App\Models\Category;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 
 class Helpers
@@ -38,46 +37,34 @@ class Helpers
     return '#' . str_pad($last_id + 1, 10, "0", STR_PAD_LEFT);
   }
 
-  public static function getStatusOrder($status)
+  public static function getStatusBooking($status)
   {
     switch ($status) {
-      case 'new':
-        return 'Đang chờ xác nhận';
-      case 'accepted':
-        return 'Chấp nhận';
-      case 'delivering':
-        return 'Đang vận chuyển';
-      case 'cancel':
+      case 'paid':
+        return 'Đã thanh toán';
+      case 'unpaid':
+        return 'Chưa thanh toán';
+      case 'canceled':
         return 'Đã huỷ';
-      case 'done':
-        return 'Hoàn thành';
       default:
         return '';
     }
   }
 
-  public function displayStatusOrder(string $status): string
+  public static function displayStatusBooking(string $status): string
   {
     switch ($status) {
-      case 'new':
-        return '<span class="badge badge-sm bg-secondary ms-1">Mới</span>';
-      case 'accepted':
-        return '<span class="badge badge-sm bg-primary ms-1">Đã xác nhận</span>';
-      case 'delivering':
-        return '<span class="badge badge-sm bg-info ms-1">Đang vận chuyển</span>';
-      case 'cancel':
+      case 'paid':
+        return '<span class="badge badge-sm bg-success ms-1">Đã thanh toán</span>';
+      case 'unpaid':
+        return '<span class="badge badge-sm bg-primary ms-1">Chưa thanh toán</span>';
+      case 'canceled':
         return '<span class="badge badge-sm bg-danger ms-1">Đã huỷ</span>';
       default:
-        return '<span class="badge badge-sm bg-success ms-1">Hoàn thành</span>';
+        return '';
     }
   }
 
-  public function displayStatusProgress(string $status, int $position): string
-  {
-    $dataStatus = ['new', 'accepted', 'delivering', 'cancel', 'done'];
-    if ($status == 'cancel') return 'step-cancel';
-    return array_search($status, $dataStatus) >= $position ? 'active' : '';
-  }
 
   public static function getPaginateList()
   {
@@ -104,11 +91,38 @@ class Helpers
     return env('DEFAULT_MOVIE_URL');
   }
 
-  public function formatTimeNotify($time)
+  public static function formatTimeNotify($time)
   {
     Carbon::setLocale('vi');
     $data = Carbon::create($time);
     $now = Carbon::now();
     return $data->diffForHumans($now);
+  }
+
+  public static function getAmountBooking($show, $seats) {
+    $total = $show->price ?? 0;
+    
+    foreach($seats as $seat) {
+      $total += $seat->typeSeat->price;
+    }
+
+    return $total;
+  }
+
+  public static function getNowTime() {
+    return \Carbon\Carbon::now('Asia/Ho_Chi_Minh')->format('H:i');
+  }
+
+  public static function disableUnpaidSeat() {
+    $booking_unpaid = Booking::where('status', 'unpaid')->where('created_at', '<=', Carbon::now('Asia/Ho_Chi_Minh')->subMinute(15))->get();
+    foreach($booking_unpaid as $booking) {
+        $booking->update([
+            'status' => 'canceled',
+            'updated_at' => Carbon::now('Asia/Ho_Chi_Minh')->toDateTimeString()
+        ]);
+        foreach($booking->tickets as $ticket) {
+            $ticket->fill(['status' => 'canceled'])->save();
+        }
+    }
   }
 }

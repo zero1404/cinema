@@ -35,4 +35,9 @@ class Movie extends Model
     {
         return $this->categories->pluck('category_id')->toArray();;
     }
+
+    public static function getBySlug($slug)
+    {
+        return Movie::where('slug', $slug)->first();
+    }
 }

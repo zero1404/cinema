@@ -35,8 +35,9 @@ class ShowController extends Controller
         }
 
         $rooms = Room::all();
-        $time_slot = TimeSlot::where()
-        return view('dashboard.show.create', compact('rooms'));
+        $time_slots = TimeSlot::all();
+        $shows = Show::where('movie_id', $movie->movie_id)->get();
+        return view('dashboard.show.create', compact('shows', 'movie', 'rooms', 'time_slots'));
     }
     /**
      * Show the form for creating a new resource.
@@ -45,9 +46,7 @@ class ShowController extends Controller
      */
     public function create()
     {
-        $movies = Movie::all();
-        $rooms = Room::all();
-        return view('dashboard.show.create', compact('movies', 'rooms'));
+        return abort(404);
     }
 
     /**
@@ -59,31 +58,45 @@ class ShowController extends Controller
     public function store(Request $request)
     {
         $messages = [
-            'date.required' => 'Ngày không được bỏ trống',
-            'date.date' => 'Tên phải là chuỗi kí tự',
-            'total_seat.required' => 'Số ghế không được bỏ trống',
-            'total_seat.integer' => 'Số ghê phải là số nguyên',
-            'seat_id.required' => 'Mã ghế không được bỏ trống',
-            'seat_id.exists' => 'Mã ghế không hợp lệ'
+            'movie_id.required' => 'Mã phim không được bỏ trống',
+            'movie_id.exists' => 'Mã phim không hợp lệ',
+            'time_slot_id.required' => 'Mã khung giờ không được bỏ trống',
+            'time_slot_id.exists' => 'Mã khung giờ không hợp lệ',
+            'room_id.required' => 'Mã phòng không được bỏ trống',
+            'room_id.exists' => 'Mã phòng không hợp lệ',
+            'status.required' => 'Chưa chọn trạng thái',
+            'status.in' => 'Trạng thái không hợp lệ',
         ];
 
         $this->validate($request, [
-            'name' => 'required|string',
-            'total_seat' => 'required|integer',
-            'seat_id' => 'required|exists:seats,seat_id'
+            'movie_id' => 'required|exists:movies,movie_id',
+            'time_slot_id' => 'required|exists:time_slots,time_slot_id',
+            'room_id' => 'required|exists:rooms,room_id',
+            'status' => 'required:|in:active,inactive'
         ], $messages);
-
+        
         $data = $request->all();
 
-        $createdShow = Show::create($data);
+        $isExist = Show::where([
+            'movie_id' => $data["movie_id"],
+            'time_slot_id' => $data["time_slot_id"]
+        ])->get();
 
-        if ($createdShow) {
-            request()->session()->flash('success', 'Tạo lịch chiếu thành công.');
+        if(count($isExist) > 0) {
+            return redirect()->back()->with('error', 'Trùng khung giờ!');
+
         } else {
-            request()->session()->flash('error', 'Có lỗi xảy ra, vui lòng thử lại!');
+            $createdShow = Show::create($data);
+        
+            if ($createdShow) {
+                request()->session()->flash('success', 'Tạo lịch chiếu thành công.');
+            } else {
+                request()->session()->flash('error', 'Có lỗi xảy ra, vui lòng thử lại!');
+            }
+        
+            return redirect()->route('show.index');
         }
 
-        return redirect()->route('show.index');
     }
 
     /**
@@ -117,8 +130,9 @@ class ShowController extends Controller
             return abort(404, 'Mã lịch chiếu không tồn tại');
         }
 
-        $seats = Seat::all();
-        return view('dashboard.show.edit', compact('show', 'seats'));
+        $rooms = Room::all();
+        $time_slots = TimeSlot::all();
+        return view('dashboard.show.edit', compact('show', 'rooms', 'time_slots'));
     }
 
     /**

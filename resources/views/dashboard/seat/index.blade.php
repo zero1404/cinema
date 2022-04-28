@@ -12,7 +12,9 @@ $breadcrumbs = [
 
 $columns = [
 'id' => 'ID',
-'name' => 'Tên',
+'name' => 'Tên Ghế',
+'room' => 'Phòng',
+'type_seat' => 'Loại Ghế',
 'action' => '',
 ];
 @endphp
@@ -28,6 +30,8 @@ $columns = [
   <tr>
     <td>{{ $seat->seat_id }}</td>
     <td>{{ $seat->name }}</td>
+    <td>{{ $seat->room->name }}</td>
+    <td>{{ $seat->typeSeat->name }}</td>
     <td class="col-sm-1">
       <x-Dashboard.Shared.ButtonAction :id="$seat->seat_id" show="seat.show" edit="seat.edit"
         delete="seat.destroy" />

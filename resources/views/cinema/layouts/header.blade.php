@@ -3,120 +3,42 @@
         <div class="container">
             <div class="header-wrapper">
                 <div class="logo">
-                    <a href="">
+                    <a href="{{ route('cinema.home')}}">
                         <img src="{{ asset('cinema/images/logo/logo.png') }}" alt="logo">
                     </a>
                 </div>
                 <ul class="menu">
                     <li>
-                        <a href="#0" class="active">Home</a>
+                        <a href="{{ route('cinema.home')}}" class="{{Route::currentRouteName() == 'cinema.home' ? 'active' : ''}}">Trang Chủ</a>
                     </li>
                     <li>
-                        <a href="#0">movies</a>
-                        <ul class="submenu">
-                            <li>
-                                <a href="movie-grid.html">Movie Grid</a>
-                            </li>
-                            <li>
-                                <a href="movie-list.html">Movie List</a>
-                            </li>
-                            <li>
-                                <a href="movie-details.html">Movie Details</a>
-                            </li>
-                            <li>
-                                <a href="movie-details-2.html">Movie Details 2</a>
-                            </li>
-                            <li>
-                                <a href="movie-ticket-plan.html">Movie Ticket Plan</a>
-                            </li>
-                            <li>
-                                <a href="movie-seat-plan.html">Movie Seat Plan</a>
-                            </li>
-                            <li>
-                                <a href="movie-checkout.html">Movie Checkout</a>
-                            </li>
-                            <li>
-                                <a href="popcorn.html">Movie Food</a>
-                            </li>
-                        </ul>
+                        <a href="{{ route('cinema.movie.list') }}" class="{{Route::currentRouteName() == 'cinema.movie.list' ? 'active' : ''}}">Phim</a>
                     </li>
                     <li>
-                        <a href="#0">events</a>
-                        <ul class="submenu">
-                            <li>
-                                <a href="events.html">Events</a>
-                            </li>
-                            <li>
-                                <a href="event-details.html">Event Details</a>
-                            </li>
-                            <li>
-                                <a href="event-speaker.html">Event Speaker</a>
-                            </li>
-                            <li>
-                                <a href="event-ticket.html">Event Ticket</a>
-                            </li>
-                            <li>
-                                <a href="event-checkout.html">Event Checkout</a>
-                            </li>
-                        </ul>
+                        <a href="{{ route('cinema.about') }}" class="{{Route::currentRouteName() == 'cinema.about' ? 'active' : ''}}">Giới Thiệu</a>
                     </li>
                     <li>
-                        <a href="#0">sports</a>
-                        <ul class="submenu">
-                            <li>
-                                <a href="sports.html">Sports</a>
-                            </li>
-                            <li>
-                                <a href="sport-details.html">Sport Details</a>
-                            </li>
-                            <li>
-                                <a href="sports-ticket.html">Sport Ticket</a>
-                            </li>
-                            <li>
-                                <a href="sports-checkout.html">Sport Checkout</a>
-                            </li>
-                        </ul>
+                        <a href="{{ route('cinema.contact') }}" class="{{Route::currentRouteName() == 'cinema.contact' ? 'active' : ''}}">Liên Hệ</a>
                     </li>
-                    <li>
-                        <a href="#0">pages</a>
-                        <ul class="submenu">
-                            <li>
-                                <a href="about.html">About Us</a>
-                            </li>
-                            <li>
-                                <a href="apps-download.html">Apps Download</a>
-                            </li>
-                            <li>
-                                <a href="sign-in.html">Sign In</a>
-                            </li>
-                            <li>
-                                <a href="sign-up.html">Sign Up</a>
-                            </li>
-                            <li>
-                                <a href="404.html">404</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="#0">blog</a>
-                        <ul class="submenu">
-                            <li>
-                                <a href="blog.html">Blog</a>
-                            </li>
-                            <li>
-                                <a href="blog-details.html">Blog Single</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="contact.html">About</a>
-                    </li>
-                    <li>
-                        <a href="contact.html">Contact</a>
-                    </li>
+
+                   @guest
                     <li class="header-button pr-0">
-                        <a href="sign-up.html">join us</a>
-                    </li>
+                        <a href="{{ route('cinema.auth.login') }}">Đăng Nhập</a>
+                    </li> 
+                    @endguest
+
+                    @auth
+                        <li>
+                            <a href="{{ route('cinema.contact') }}" class="{{Route::currentRouteName() == 'cinema.contact' ? 'active' : ''}}">Liên Hệ</a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0)" onclick="event.preventDefault();
+                            document.getElementById('logout-form').submit();"> Đăng xuất</a>
+                        </li>
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                            @csrf
+                        </form>
+                    @endauth
                 </ul>
                 <div class="header-bar d-lg-none">
 					<span></span>

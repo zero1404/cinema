@@ -3,116 +3,270 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Product;
+use Carbon\Carbon;
+use App\Models\Movie;
 use App\Models\Category;
-use App\Models\Coupon;
-use App\Models\Cart;
+use App\Models\Show;
 use App\Models\User;
-use App\Models\Order;
-use App\Models\OrderDetail;
-use Vanthao03596\HCVN\Models\Province;
-use Illuminate\Support\Facades\Auth;
+use App\Models\Seat;
+use App\Models\Booking;
+use App\Models\Ticket;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use App\Rules\MatchOldPassword;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Notification;
-use App\Notifications\StatusNotification;
+use Illuminate\Support\Facades\DB;
 use Helpers;
 
 class HomeController extends Controller
 {
-    private function orderBy(string $key)
-    {
-        $orderBy = [
-            'new' => ['id', 'DESC'],
-            'old' => ['id', 'ASC'],
-            'sold' => ['sold', 'DESC'],
-            'lowPrice' => ['price', 'ASC'],
-            'highPrice' => ['price', 'DESC']
-        ];
-        return isset($orderBy[$key]) ? $orderBy[$key] : $orderBy['new'];
-    }
-
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
     public function index(Request $request)
     {
-        $products = Product::orderBy('created_at', 'DESC')->where('status', 'active')->paginate(12);
-        $productsHot = Product::orderBy('sold', 'DESC')->where('status', 'active')->paginate(8);
-
-        if ($request->ajax()) {
-            $html = view('shop.product.list', compact('products'))->render();
-            return response()->json($html);
-        }
-        return view('shop.home', compact('products', 'productsHot'));
+        $movies_now_showing = Movie::where('status', 'active')->whereDate('release_date', '<=', Carbon::now())->orderBy('movie_id', 'DESC')->get();
+        $movies_up_comming = Movie::where('status', 'active')->whereDate('release_date', '>', Carbon::now())->orderBy('movie_id', 'DESC')->get();
+        return view('cinema.home.index', compact('movies_now_showing', 'movies_up_comming'));
     }
+    
+    public function showAbout()
+    {
+        return view('cinema.home.about');
+    }
+
 
     public function showContact()
     {
-        return view('shop.contact.index');
+        return view('cinema.home.contact');
     }
 
-    public function productSearch(Request $request)
+    public function searchMovie(Request $request)
     {
-        $paginate = $request->paginate ?? 8;
-        $sort = $request->sort ?? 'new';
-        $orderBy = $this->orderBy($sort);
         $keyword = $request->keyword;
-        $products = Product::orwhere('title', 'like', '%' . $keyword . '%')
+        $movies = Movie::orwhere('title', 'like', '%' . $keyword . '%')
             ->orwhere('slug', 'like', '%' . $keyword . '%')
-            //->orwhere('description', 'like', '%' . $request->search . '%')
-            ->orwhere('price', 'like', '%' . $keyword . '%')
-            ->orderBy($orderBy[0], $orderBy[1])
-            ->paginate($paginate);
-        return view('shop.product.search', compact('products', 'keyword', 'sort', 'paginate'));
+            ->orderBy('created_at', 'DESC')
+            ->paginate(12);
+        return view('cinema.movie.search', compact('movies', 'keyword'));
     }
 
-    public function productList(Request $request)
+    public function showListMovie(Request $request)
     {
-        $paginate = $request->paginate ?? 8;
-        $sort = $request->sort ?? 'new';
-        $orderBy = $this->orderBy($sort);
-        $products = Product::orderBy($orderBy[0], $orderBy[1])->where('status', 'active')->paginate($paginate);
         return view('shop.product.index', compact('products', 'paginate', 'sort'));
     }
 
-    public function productDetail($slug)
+    public function showMovieDetail($slug)
     {
-        $product = Product::getBySlug($slug);
-        if (!$product) {
+        $movie = Movie::getBySlug($slug);
+        if (!$movie) {
             abort(404);
         }
-        $related_products = Category::find($product->category_id)->products->take(4);
-        return view('shop.product.detail', compact('product', 'related_products'));
+        return view('cinema.movie.detail', compact('movie'));
     }
 
-    public function productByCategory(Request $request, $slug)
+    public function showMovieByCategory(Request $request, $slug)
     {
-        $paginate = $request->paginate ?? 8;
-        $sort = $request->sort ?? 'new';
-        $orderBy = $this->orderBy($sort);
         $category = Category::getBySlug($slug);
-        $products = $category->products()->paginate($paginate);
-        if ($category->parent == null) {
-            $children_id = Category::getChildrenIds($category->id);
-            $products = Product::whereIn('category_id', $children_id)->paginate($paginate);
+        $movies = $category->movies()->paginate(12);
+        return view('shop.product.index', compact('movies', 'category'));
+    }
+
+    public function showLogin()
+    {
+        return view('cinema.auth.login');
+    }
+
+    public function showRegister()
+    {
+        return view('cinema.auth.register');
+    }
+
+
+    public function chooseShow(Request $request, $movieId) {
+        $movie = Movie::find($movieId);
+
+        if(!$movie) {
+            return abort(404);
         }
-        return view('shop.product.index', compact('products', 'category', 'paginate', 'sort'));
+        $selected_date = Carbon::today('Asia/Ho_Chi_Minh');
+        
+        if($request->method() === "POST") {
+            $selected_date = Carbon::parse($request->input('date'));
+        }
+
+        $list_date = Show::where([
+            ['movie_id' , '=', $movie->movie_id],
+            ['status', '=', 'active'],
+        ])->whereDate('date', '>=', Carbon::today('Asia/Ho_Chi_Minh'))->groupBy('date')->get()->pluck('date');
+
+        $list_shows = Show::where([
+            ['movie_id' , '=', $movie->movie_id],
+            ['status', '=', 'active'],
+        ])->whereDate('date', '=', $selected_date)->get();
+
+        return view('cinema.booking.choose-show', compact('movie', 'list_shows', 'selected_date', 'list_date'));
     }
 
-    public function login()
-    {
-        return view('shop.user.login');
+    public function chooseSeat(Request $request, $movieId, $showId) {
+        $movie = Movie::find($movieId);
+        $show = Show::find($showId);
+        
+        if(!$movie || !$show) {
+            return abort(404);
+        }
+
+        Helpers::disableUnpaidSeat();
+
+        $all_seats = Seat::where('room_id', $show->room->room_id)->orderBy('name', 'DESC')->get();
+
+        $group_seat = $all_seats->reduce(function ($carry, $seat) {
+            $first_letter = $seat['name'][0];
+
+            if ( !isset($carry[$first_letter]) ) {
+                $carry[$first_letter] = [];
+            }
+    
+            $carry[$first_letter][] = $seat;
+    
+            return $carry;    
+        }, []);
+
+
+        return view('cinema.booking.choose-seat', compact('movie', 'show', 'group_seat'));
     }
 
-    public function register()
-    {
-        return view('shop.user.register');
+    public function getSeatIds(Request $request, $movieId, $showId) {
+        $movie = Movie::find($movieId);
+        $show = Show::find($showId);
+        
+        if(!$movie || !$show) {
+            return abort(404);
+        }
+
+        $seat_ids = explode(',', $request->input('seat_ids'));
+        $seats = Seat::find($seat_ids);
+
+        $request->session()->put('movie', $movie);
+        $request->session()->put('show', $show);
+        $request->session()->put('seats', $seats);
+        return redirect()->route('cinema.booking.payment');
+    }
+
+    public function showPayment(Request $request) {
+        $movie = $request->session()->get('movie');
+        $show = $request->session()->get('show');
+        $seats = $request->session()->get('seats');
+
+        if(!$movie  || !$show || !$seats) {
+            return abort(404);
+        }
+
+        $group_seat = $seats->reduce(function ($carry, $seat) {
+            $type_seat_name = $seat->typeSeat->name;
+
+            if ( !isset($carry[$type_seat_name]) ) {
+                $carry[$type_seat_name] = [];
+            }
+    
+            $carry[$type_seat_name][] = $seat;
+    
+            return $carry;    
+        }, []);
+
+        return view('cinema.booking.payment', compact('movie', 'show', 'seats', 'group_seat'));
+    }
+
+    public function payment(Request $request) {
+        $this->validate($request, [
+            'first_name' => 'string|required',
+            'last_name' => 'string|required',
+            'telephone' => 'numeric|required',
+            'email' => 'string|email|required',
+            'movie_id' => 'required|integer|exists:movies,movie_id',
+            'show_id' => 'required|integer|exists:shows,show_id',
+            'seat_ids' => 'required'
+        ]);
+
+        $movie = Movie::find($request->input('movie_id'));
+        $show = Show::find($request->input('show_id'));
+        
+        $seat_ids = explode(',', $request->input('seat_ids'));
+        $seats = Seat::find($seat_ids);
+
+        if(!$movie || !$show || count($seat_ids) === 0) {
+            return abort(404);
+        }
+
+        try {
+            DB::transaction(function() use($request, $seats, $show, $movie) {
+                foreach($seats as $seat) {
+                    if($seat->isFree($show->show_id) === false) throw new \Exception('Ghế đã có người đặt');
+                }
+
+                $booking = new Booking();
+                $booking['booking_number'] = Helpers::generateOrderNumber(Booking::count());
+                $booking["first_name"] = $request->input("first_name");
+                $booking["last_name"] = $request->input("last_name");
+                $booking["telephone"] = $request->input("telephone");
+                $booking["email"] = $request->input("email");
+                $booking["payment_method"] = 'offline';
+                $booking["status"] = 'unpaid';
+                $booking['user_id'] = Auth::id();
+                $booking->save();
+
+                $tickeds = [];
+                $amount = 0;
+                foreach ($seats as $seat) {
+                    $price = $seat->typeSeat->price + $show->room->price;
+                    $amount += $price;
+
+                    $tickeds[] = [
+                        'price' => $price,
+                        'booking_id' => $booking->booking_id,
+                        'seat_id' => $seat->seat_id,
+                        'show_id' => $show->show_id,
+                        'status' => 'active',
+                    ];
+                }
+
+                Ticket::insert($tickeds);
+                $booking->fill([
+                    'amount' => $amount,
+                    'created_at' => Carbon::now('Asia/Ho_Chi_Minh')->toDateTimeString(),
+                    'updated_at' => Carbon::now('Asia/Ho_Chi_Minh')->toDateTimeString()
+                    ])->save();
+
+                $request->session()->put('movie', $movie);
+                $request->session()->put('show', $show);
+                $request->session()->put('booking', $booking);
+
+            });
+        } catch (\Exception $e) {
+            $request->put('error_booking', true);
+            return redirect()->route('cinema.booking.failed')->with('error', $e->getMessage());
+        }
+        return redirect()->route('cinema.booking.success');
+    }
+
+    public function showBookingSuccess(Request $request) {
+        $movie = $request->session()->pull('movie');
+        $show = $request->session()->pull('show');
+        $booking = $request->session()->pull('booking');
+
+        if(!$booking) {
+            return redirect()->route('cinema.booking.list');
+        }
+
+        return view('cinema.booking.success', compact('movie', 'show', 'booking'));
+    }
+
+    public function showBookingFailed(Request $request) {
+        $isHasError = $request->session()->pull('error_booking');
+
+        if(!$isHasError) {
+            return redirect()->route('cinema.home');
+        }
+
+        return view('cinema.booking.failed');
     }
 
     public function profile()
@@ -127,146 +281,21 @@ class HomeController extends Controller
         return view('shop.user.change-password', compact('user'));
     }
 
-    public function checkout()
+    public function getBookingList()
     {
-        $carts = Cart::getCart();
-        if (!$carts || $carts->count == 0) {
-            return redirect()->route('shop.home');
-        }
-        if (session('coupon')) {
-            $coupon = Coupon::find(session('coupon')['id']);
-            if (!Helpers::isValidCoupon($coupon)) {
-                session()->forget('coupon');
-            }
-        }
-        $user = Auth::user();
-        $provinces = Province::get();
-        $discount_money = Helpers::getDiscountMoney($carts->total);
-        return view('shop.user.checkout', compact('user', 'carts', 'provinces', 'discount_money'));
+        $booking_list = Booking::getListOrdered();
+        return view('shop.user.list-ordered', compact('booking_list'));
     }
 
-    public function getOrderList()
+    public function getDetailBooking($id)
     {
-        $orders = Order::getListOrdered();
-        return view('shop.user.list-ordered', compact('orders'));
-    }
+        $booking = Booking::find($id);
 
-    public function getDetailOrder($id)
-    {
-        $order = Order::find($id);
-        return view('shop.user.detail-ordered', compact('order'));
-    }
-
-    public function order(Request $request)
-    {
-        if ($request->ajax()) {
-            $validator = Validator::make($request->all(), [
-                'firstname' => 'string|required',
-                'lastname' => 'string|required',
-                'address' => 'string|required',
-                'telephone' => 'numeric|required',
-                'email' => 'string|required',
-                'note' => 'string|nullable',
-                'coupon' => 'nullable|numeric',
-            ]);
-
-            if ($validator->fails()) {
-                return response()->json(['message' => 'Chưa nhập thông tin thanh toán', 'type' => 'empty-form'], 400);
-            }
-            $carts = Cart::getCart();
-            if (empty($carts)) {
-                return response()->json(['message' => 'Giỏ hàng trống', 'type' => 'cart-empty'], 400);
-            }
-
-            $order = new Order();
-            $data = $request->all();
-            $full_address = $request->input('address') . ", " . $request->input('ward') . ", " . $request->input('district') . ", " . $request->input('province');
-            $data['address'] = $full_address;
-            if (session('coupon')) {
-                $coupon = Coupon::find(session('coupon')['id']);
-                if (!Helpers::isValidCoupon($coupon)) {
-                    session()->forget('coupon');
-                }
-            }
-            $discount_money = Helpers::getDiscountMoney($carts->total);
-            $order['order_number'] = Helpers::generateOrderNumber(Order::count());
-            $order['user_id'] = Auth::id();
-            $order['address'] = $full_address;
-            $order['status'] = 'new';
-            $order['discount'] = $discount_money;
-            $order->total = $carts->total - $discount_money;
-            $order->fill($data)->save();
-
-            $order_items = [];
-            foreach ($carts->items as $item) {
-                $order_items[] = [
-                    'order_id' => $order->id,
-                    'product_id' => $item->product->id,
-                    'quantity' => $item->quantity,
-                    'price' => $item->quantity * $item->product->price,
-                ];
-            }
-            OrderDetail::insert($order_items);
-
-            $carts->status = 'inactive';
-            $carts->save();
-
-            if (session('coupon')) {
-                $coupon = Coupon::find(session('coupon')['id']);
-                if ($coupon) {
-                    $currentTime = $coupon->times;
-                    $coupon->times = $currentTime > 1 ? $currentTime - 1 : 0;
-                    if ($currentTime == 1) $coupon->status = 'inactive';
-                    $coupon->save();
-                }
-                session()->forget('coupon');
-            }
-            $request->session()->put('order-success', true);
-            $details = [
-                'title' => 'Có đơn đặt hàng mới',
-                'content' => auth()->user()->fullname . " đã tạo đơn hàng mới",
-                'actionURL' => route('order.show', $order->id),
-                'fas' => 'fa-cart-plus'
-            ];
-
-            $users = User::whereIn('role', ['admin', 'customer'])->get();
-
-            Notification::send($users, new StatusNotification($details));
-            return response()->json(['message' => 'Successful'], 200);
+        if(!$booking) {
+            return abort(404, 'Mã đơn đặt hàng không tồn tại');
         }
-    }
 
-    public function orderSuccess(Request $request)
-    {
-        if ($request->session()->has('order-success')) {
-            $request->session()->forget('order-success');
-            return view('shop.order.success');
-        }
-        return redirect()->route('shop.list-ordered');
-    }
-
-    public function applyCoupon(Request $request)
-    {
-        $coupon = Coupon::where('code', $request->code)
-            ->where('status', 'active')
-            ->where('times', '>', 0)
-            ->first();
-
-        if (!$coupon) {
-            session()->forget('coupon');
-            request()->session()->flash('error-coupon', 'Mã phiếu giảm giá không hợp lệ, Vui lòng thử lại');
-            return back();
-        }
-        if ($coupon) {
-            session()->put('coupon', [
-                'id' => $coupon->id,
-                'code' => $coupon->code,
-                'type' => $coupon->type,
-                'value' => $coupon->value
-            ]);
-            request()->session()->flash('success-coupon', 'Phiếu giảm giá đã được áp dụng thành công');
-            return redirect()->back();
-        }
+        return view('shop.booking.detail', compact('booking'));
     }
 
     public function updateProfile(Request $request)
@@ -280,14 +309,6 @@ class HomeController extends Controller
             'lastname.string' => 'Họ phải là chuỗi kí tự',
             'lastname.required' => 'Họ không được bỏ trống',
             'lastname.max' => 'Họ không được vượt quá 100 kí tự',
-            'address.required' => 'Địa chỉ không được bỏ trống',
-            'address.string' => 'Địa chỉ phải là chuỗi kí tự',
-            'province.required' => 'Tỉnh không được bỏ trống',
-            'province.string' => 'Tỉnh phải là chuỗi kí tự',
-            'district.required' => 'Quận/huyện không được bỏ trống',
-            'district.string' => 'Quận/huyện phải là chuỗi kí tự',
-            'ward.required' => 'Phường/xã không được bỏ trống',
-            'ward.string' => 'Phường/xã phải là chuỗi kí tự',
             'email.required' => 'Email không được bỏ trống',
             'email.email' => 'Email không hợp lệ',
             'email.unique' => 'Email không có sẵn',
@@ -300,10 +321,6 @@ class HomeController extends Controller
         $this->validate($request, [
             'firstname' => 'required|string|max:100',
             'lastname' => 'required|string|max:100',
-            'address' => 'required|string',
-            'province' => 'required|string',
-            'district' => 'required|string',
-            'ward' => 'required|string',
             'telephone' => 'required|string|min:10|max:10',
         ], $messages);
 

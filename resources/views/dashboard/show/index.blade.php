@@ -12,10 +12,8 @@ $breadcrumbs = [
 
 $columns = [
 'id' => 'ID',
-'name' => 'Tên',
-'date' => 'Ngày Chiếu',
-'time_start' => 'Giờ Chiếu',
 'movie' => 'Phim',
+'time_start' => 'Khung Giờ',
 'room' => 'Phòng Chiếu',
 'action' => '',
 ];
@@ -31,8 +29,8 @@ $columns = [
   @foreach ($shows as $show)
   <tr>
     <td>{{ $show->show_id }}</td>
-    <td>{{ $show->date }}</td>
     <td>{{ $show->movie->title }}</td>
+    <td>{{ $show->timeSlot->time_start .' - '. $show->timeSlot->time_end }}</td>
     <td>{{ $show->room->name }}</td>
     <td class="col-sm-1">
       <x-Dashboard.Shared.ButtonAction :id="$show->show_id" show="show.show" edit="show.edit"

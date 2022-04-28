@@ -11,7 +11,7 @@ class Show extends Model
 
     protected $table ='shows';
     protected $primaryKey = 'show_id';
-    protected $fillable = ['date', 'time_slot_id', 'movie_id', 'room_id', 'status'];
+    protected $fillable = ['time_slot_id', 'movie_id', 'room_id', 'status'];
 
     public function timeSlot() {
         return $this->hasOne('App\Models\TimeSlot', 'time_slot_id', 'time_slot_id');
@@ -19,6 +19,10 @@ class Show extends Model
 
     public function movie() {
         return $this->hasOne('App\Models\Movie', 'movie_id', 'movie_id');
+    }
+
+    public function tickets() {
+        return $this->hasMany('App\Models\Ticket', 'ticket_id', 'ticket_id');
     }
 
     public function room() {

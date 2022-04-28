@@ -14,7 +14,7 @@
               @if($message)
               <p class="lead my-4">{{ $message }}</p>
               @endif
-              <a href="{{ url()->previous() }}"
+              <a href="{{ redirect()->back()->getTargetUrl() }}"
                 class="btn btn-gray-800 d-inline-flex align-items-center justify-content-center mb-4">
                 <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20"
                   xmlns="http://www.w3.org/2000/svg">
