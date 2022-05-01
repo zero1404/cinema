@@ -5,13 +5,13 @@
             <div class="container">
                 <div class="newslater-container bg_img" data-background="{{ asset('cinema/images/newslater/newslater-bg01.jpeg') }}">
                     <div class="newslater-wrapper">
-                        <h5 class="cate">subscribe to Boleto </h5>
-                        <h3 class="title">to get exclusive benifits</h3>
+                        <h5 class="cate">Đăng ký nhận tin tức mới với Boleto </h5>
+                        <h3 class="title">để nhận được những ưu đãi độc quyền</h3>
                         <form class="newslater-form">
-                            <input type="text" placeholder="Your Email Address">
-                            <button type="submit">subscribe</button>
+                            <input type="text" placeholder="Nhập email">
+                            <button type="submit">Đăng Ký</button>
                         </form>
-                        <p>We respect your privacy, so we never share your info</p>
+                        <p>Chúng tôi tôn trọng quyền riêng tư của bạn, vì vậy chúng tôi không bao giờ chia sẻ thông tin của bạn</p>
                     </div>
                 </div>
             </div>
@@ -58,19 +58,19 @@
                     </div>
                     <ul class="links">
                         <li>
-                            <a href="#">About</a>
+                            <a href="#">Giới thiệu </a>
                         </li>
                         <li>
-                            <a href="#">Terms Of Use</a>
+                            <a href="#">Điều khoản sử dụng</a>
                         </li>
                         <li>
-                            <a href="#">Privacy Policy</a>
+                            <a href="#">Chính sách bảo mật</a>
                         </li>
                         <li>
                             <a href="#">FAQ</a>
                         </li>
                         <li>
-                            <a href="#">Feedback</a>
+                            <a href="#">Phản hồi</a>
                         </li>
                     </ul>
                 </div>

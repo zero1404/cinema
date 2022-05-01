@@ -51,7 +51,8 @@ class HomeController extends Controller
 
     public function showListMovie(Request $request)
     {
-        return view('shop.product.index', compact('products', 'paginate', 'sort'));
+        $movies = Movie::orderBy('movie_id', 'DESC')->paginate(12);
+        return view('cinema.movie.list', compact('movies'));
     }
 
     public function showMovieDetail($slug)

@@ -24,7 +24,6 @@
                   <div class="widget-1 widget-check">
                       <div class="widget-header">
                           <h5 class="m-title">Lọc</h5> 
-                          {{-- <a href="#0" class="clear-check">Clear All</a> --}}
                       </div>
                   </div>
                   <div class="widget-1 widget-check">
