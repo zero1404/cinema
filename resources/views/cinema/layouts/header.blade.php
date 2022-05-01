@@ -22,6 +22,9 @@
                     </li>
 
                    @guest
+                   <li class="header-button pr-0">
+                    <a href="{{ route('cinema.auth.register') }}">Đăng Ký</a>
+                    </li> 
                     <li class="header-button pr-0">
                         <a href="{{ route('cinema.auth.login') }}">Đăng Nhập</a>
                     </li> 

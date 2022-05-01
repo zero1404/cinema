@@ -2,15 +2,6 @@
 @section('title', 'Đăng Nhập')
 
 @section('content')
-@if ($errors->any())
-    <div class="alert alert-danger">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
     <!-- ==========Sign-In-Section========== -->
     <section class="account-section bg_img" data-background="./assets/images/account/account-bg.jpg">
       <div class="container">
