@@ -14,7 +14,6 @@ $columns = [
 'id' => 'ID',
 'name' => 'Tên',
 'total_seat' => 'Số Ghế',
-'type_seat' => 'Loại Ghế',
 'action' => '',
 ];
 @endphp
@@ -30,8 +29,7 @@ $columns = [
   <tr>
     <td>{{ $room->room_id }}</td>
     <td>{{ $room->name }}</td>
-    <td>{{ $room->total_seat }}</td>
-    <td>{{ $room->seat->name }}</td>
+    <td>{{ count($room->seat()) }}</td>
     <td class="col-sm-1">
       <x-Dashboard.Shared.ButtonAction :id="$room->room_id" show="room.show" edit="room.edit"
         delete="room.destroy" />

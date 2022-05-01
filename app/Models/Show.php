@@ -11,7 +11,7 @@ class Show extends Model
 
     protected $table ='shows';
     protected $primaryKey = 'show_id';
-    protected $fillable = ['time_slot_id', 'movie_id', 'room_id', 'status'];
+    protected $fillable = ['time_slot_id', 'movie_id', 'room_id', 'date', 'status', 'price'];
 
     public function timeSlot() {
         return $this->hasOne('App\Models\TimeSlot', 'time_slot_id', 'time_slot_id');

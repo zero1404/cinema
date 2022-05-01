@@ -36,6 +36,6 @@ class Booking extends Model
 
     public static function getListBooking()
     {
-        return Booking::where('user_id', Auth::id())->orderBy('id', 'DESC')->paginate(12);
+        return Booking::where('user_id', Auth::id())->orderBy('booking_id', 'DESC')->paginate(12);
     }
 }

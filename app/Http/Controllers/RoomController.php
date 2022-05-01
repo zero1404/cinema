@@ -41,16 +41,10 @@ class RoomController extends Controller
         $messages = [
             'name.required' => 'Tên không được bỏ trống',
             'name.string' => 'Tên phải là chuỗi kí tự',
-            'total_seat.required' => 'Số ghế không được bỏ trống',
-            'total_seat.integer' => 'Số ghê phải là số nguyên',
-            'seat_id.required' => 'Mã ghế không được bỏ trống',
-            'seat_id.exists' => 'Mã ghế không hợp lệ'
         ];
 
         $this->validate($request, [
             'name' => 'required|string',
-            'total_seat' => 'required|integer',
-            'seat_id' => 'required|exists:seats,seat_id'
         ], $messages);
 
         $data = $request->all();
@@ -119,16 +113,10 @@ class RoomController extends Controller
         $messages = [
             'name.required' => 'Tên không được bỏ trống',
             'name.string' => 'Tên phải là chuỗi kí tự',
-            'total_seat.required' => 'Số ghế không được bỏ trống',
-            'total_seat.integer' => 'Số ghê phải là số nguyên',
-            'seat_id.required' => 'Mã ghế không được bỏ trống',
-            'seat_id.exists' => 'Mã ghế không hợp lệ'
         ];
 
         $this->validate($request, [
             'name' => 'required|string',
-            'total_seat' => 'required|integer',
-            'seat_id' => 'required|exists:seats,seat_id'
         ], $messages);
 
         $data = $request->all();

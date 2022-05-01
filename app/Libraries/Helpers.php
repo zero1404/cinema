@@ -19,9 +19,9 @@ class Helpers
     return number_format($currency, 0, ',', '.') . 'đ';
   }
 
-  public static function getListMenuCategory()
+  public static function getListCategory()
   {
-    return Category::getParentCategories();
+    return Category::all();
   }
 
   public static function getRandomMovie()

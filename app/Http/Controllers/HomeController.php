@@ -209,6 +209,7 @@ class HomeController extends Controller
                 $booking["telephone"] = $request->input("telephone");
                 $booking["email"] = $request->input("email");
                 $booking["payment_method"] = 'offline';
+                $booking["show_id"] = $show->show_id;
                 $booking["status"] = 'unpaid';
                 $booking['user_id'] = Auth::id();
                 $booking->save();
@@ -272,7 +273,7 @@ class HomeController extends Controller
     public function profile()
     {
         $user = Auth::user();
-        return view('shop.user.profile', compact('user'));
+        return view('cinema.user.profile', compact('user'));
     }
 
     public function changePassword()
@@ -283,19 +284,21 @@ class HomeController extends Controller
 
     public function getBookingList()
     {
-        $booking_list = Booking::getListOrdered();
-        return view('shop.user.list-ordered', compact('booking_list'));
+        Helpers::disableUnpaidSeat();
+        $bookings = Booking::getListBooking();
+        return view('cinema.booking.list', compact('bookings'));
     }
 
     public function getDetailBooking($id)
     {
+        Helpers::disableUnpaidSeat();
         $booking = Booking::find($id);
 
         if(!$booking) {
             return abort(404, 'Mã đơn đặt hàng không tồn tại');
         }
 
-        return view('shop.booking.detail', compact('booking'));
+        return view('cinema.booking.detail', compact('booking'));
     }
 
     public function updateProfile(Request $request)
@@ -335,7 +338,7 @@ class HomeController extends Controller
         } else {
             request()->session()->flash('error', 'Có lỗi xảy ra, vui lòng thử lại!');
         }
-        return redirect()->route('shop.profile');
+        return redirect()->route('cinema.profile');
     }
 
     public function updatePassword(Request $request)
@@ -367,7 +370,7 @@ class HomeController extends Controller
         } else {
             request()->session()->flash('error', 'Có lỗi xảy ra, vui lòng thử lại!');
         }
-        return redirect()->route('shop.change-password-profile');
+        return redirect()->route('cinema.change-password-profile');
     }
 
     public function updateAvatar(Request $request)
@@ -392,6 +395,6 @@ class HomeController extends Controller
         } else {
             request()->session()->flash('error', 'Có lỗi xảy ra, vui lòng thử lại!');
         }
-        return redirect()->route('shop.profile');
+        return redirect()->route('cinema.profile');
     }
 }

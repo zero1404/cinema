@@ -44,14 +44,6 @@ $breadcrumbs = [
                 <td>{{ $room->name }}</td>
               </tr>
               <tr>
-                <td>Loại Ghế</td>
-                <td>{{ $room->seat->name }}</td>
-              </tr>
-              <tr>
-                <td>Số Ghế</td>
-                <td>{{ $room->total_seat }}</td>
-              </tr>
-              <tr>
                 <td>Ngày tạo</td>
                 <td>{{ $room->created_at->format('d-m-Y') }}
                   - {{ $room->created_at->format('g: i a') }}</td>

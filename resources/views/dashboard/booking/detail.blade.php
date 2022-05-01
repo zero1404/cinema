@@ -34,9 +34,25 @@ $breadcrumbs = [
                 <h4 class="text-center pb-4" style="text-transform: uppercase;">Thông Tin Đơn Hàng
                 </h4>
                 <table class="table">
-                  <tr class="">
+                  <tr>
                     <td>Mã đơn</td>
                     <td> : {{ $booking->booking_number }}</td>
+                  </tr>
+                  <tr>
+                    <td>Phim</td>
+                    <td> : {{ $booking->show->movie->title }}</td>
+                  </tr>
+                  <tr>
+                    <td>Suất chiếu</td>
+                    <td> : {{ $booking->show->timeSlot->time_start . '-' .$booking->show->timeSlot->time_end  }}</td>
+                  </tr>
+                  <tr>
+                    <td>Phòng chiếu</td>
+                    <td> : {{ $booking->show->room->name }}</td>
+                  </tr>
+                  <tr>
+                    <td>Ngày chiếu</td>
+                    <td> : {{ Helpers::formatDate( $booking->show->date) }}</td>
                   </tr>
                   <tr>
                     <td>Ngày tạo đơn</td>
@@ -45,8 +61,9 @@ $breadcrumbs = [
                   </tr>
                   <tr>
                     <td>Số lượng vé</td>
-                    <td> : {{ $booking->tickets->count() }}</td>
+                    <td> : {{ $booking->tickets->count() }} vé</td>
                   </tr>
+
                   <tr>
                     <td>Trạng thái</td>
                     <td> : {!! Helpers::displayStatusBooking($booking->status) !!}</td>
@@ -54,7 +71,7 @@ $breadcrumbs = [
 
                   <tr>
                     <td>Tổng số tiền</td>
-                    <td> : {{ Helpers::formatCurrency($booking->amount) }}</td>
+                    <td> : <strong>{{ Helpers::formatCurrency($booking->amount) }}</strong></td>
                   </tr>
                 </table>
               </div>
@@ -97,10 +114,8 @@ $breadcrumbs = [
           <thead>
             <tr>
               <th>Mã vé</th>
-              <th>Phòng</th>
-              <th>Tên ghế</th>
+              <th>Số ghế</th>
               <th>Loại ghế</th>
-              <th>Khung Giờ</th>
               <th>Giá</th>
             </tr>
           </thead>
@@ -108,10 +123,8 @@ $breadcrumbs = [
             @foreach ($booking->tickets as $ticket)
             <tr>
               <td>{{ $ticket->ticket_id }}</td>
-              <td>{{ $ticket->show->room->name }}</td>
               <td>{{ $ticket->seat->name }}</td>
               <td>{{  $ticket->seat->typeSeat->name }}</td>
-              <td>{{ $ticket->show->timeSlot->time_start .' - '. $ticket->show->timeSlot->time_end }}</td>
               <td>{{ Helpers::formatCurrency($ticket->price) }}</td>
             </tr>
             @endforeach

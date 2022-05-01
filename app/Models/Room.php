@@ -11,9 +11,9 @@ class Room extends Model
 
     protected $table = 'rooms';
     protected $primaryKey = 'room_id';
-    protected $fillable = ['name', 'total_seat', 'seat_id'];
+    protected $fillable = ['name', 'total_seat'];
 
     public function seat() {
-        return $this->hasOne('App\Models\Seat', 'seat_id', 'seat_id');
+       return Seat::where('room_id', $this['room_id'])->get();
     }
 }

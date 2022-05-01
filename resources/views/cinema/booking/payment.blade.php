@@ -97,6 +97,7 @@
                 </div>
             </div>
           </div>
+          
           <div class="col-lg-4">
               <div class="booking-summery bg-one">
                   <h4 class="title">Thông Tin Thanh Toán</h4>

@@ -41,26 +41,21 @@ Route::group(['as' => 'cinema.'], function () {
         // Profile
         Route::get('/profile', 'HomeController@profile')->name('profile');
         Route::get('/profile/change-password', 'HomeController@changePassword')->name('profile.change-password');
-        Route::post('/profile/update', 'HomeController@updateProfile')->name('profile.update');
+        Route::post('/profile/update', 'HomeController@updateProfile')->name('profile.update.handle');
         Route::post('/profile/update-password', 'HomeController@updatePassword')->name('profile.change-password.handle');
         Route::post('/profile/update-avatar', 'HomeController@updateAvatar')->name('profile.update-avatar.handle');
 
         // Booking
-        Route::get('booking/{movieId}/choose-show', 'HomeController@chooseShow')->name('booking.choose-show');
-        Route::post('booking/{movieId}/choose-show', 'HomeController@chooseShow')->name('booking.choose-show.handle');
-        Route::get('booking/{movieId}/{showId}/choose-seat', 'HomeController@chooseSeat')->name('booking.choose-seat');
-        Route::post('booking/{movieId}/{showId}/get-seat-ids', 'HomeController@getSeatIds')->name('booking.get-seat-ids');
-        Route::get('booking/payment', 'HomeController@showPayment')->name('booking.payment');
-        Route::post('booking/payment', 'HomeController@payment')->name('booking.payment.handle');
-        Route::get('booking/success', 'HomeController@showBookingSuccess')->name('booking.success');
-        Route::get('booking/failed', 'HomeController@showBookingFailed')->name('booking.failed');
-
-        // Order
-        Route::post('/order', 'HomeController@order')->name('order');
-        Route::get('/order', 'HomeController@getOrderList')->name('order.list');
-        Route::get('/order-success', 'HomeController@orderSuccess')->name('order.success');
-        Route::get('/order/{id}', 'HomeController@getDetailOrder')->name('order.detail');
-
+        Route::get('/booking/{movieId}/choose-show', 'HomeController@chooseShow')->name('booking.choose-show');
+        Route::post('/booking/{movieId}/choose-show', 'HomeController@chooseShow')->name('booking.choose-show.handle');
+        Route::get('/booking/{movieId}/{showId}/choose-seat', 'HomeController@chooseSeat')->name('booking.choose-seat');
+        Route::post('/booking/{movieId}/{showId}/get-seat-ids', 'HomeController@getSeatIds')->name('booking.get-seat-ids');
+        Route::get('/booking/payment', 'HomeController@showPayment')->name('booking.payment');
+        Route::post('/booking/payment', 'HomeController@payment')->name('booking.payment.handle');
+        Route::get('/booking/success', 'HomeController@showBookingSuccess')->name('booking.success');
+        Route::get('/booking/failed', 'HomeController@showBookingFailed')->name('booking.failed');
+        Route::get('/booking/list', 'HomeController@getBookingList')->name('booking.list');
+        Route::get('/booking/{id}', 'HomeController@getDetailBooking')->name('booking.detail');
     });
 });
 
@@ -76,13 +71,6 @@ Route::group(['prefix' => '/dashboard', 'middleware' => ['auth', 'dashboard.acce
     Route::post('/profile/avatar', 'DashboardController@updateAvatar')->name('dashboard.profile.update-avatar');
     Route::get('/file-manager', 'DashboardController@fileManager')->name('dashboard.file-manager');
     Route::get('/income', 'OrderController@incomeChart')->name('product.order.income');
-
-    // Notification
-    Route::get('/notifications', 'NotificationController@index')->name('dashboard.notification.index');
-    Route::get('/notification/{id}', 'NotificationController@show')->name('dashboard.notification.show');
-    Route::delete('/notification/{id}', 'NotificationController@delete')->name('dashboard.notification.delete');
-    Route::post('/notification/mark-as-read', 'NotificationController@markAsRead')->name('dashboard.notification.mark-as-read');
-    Route::post('/notification/destroy', 'NotificationController@destroy')->name('dashboard.notification.destroy');
 
     Route::get('/show/choose-movie', 'ShowController@chooseMovie')->name('show.choose.movie');
     Route::get('/show/{id}/create', 'ShowController@createShow')->name('show.create.movie');

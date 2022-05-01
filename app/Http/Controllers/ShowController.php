@@ -66,13 +66,18 @@ class ShowController extends Controller
             'room_id.exists' => 'Mã phòng không hợp lệ',
             'status.required' => 'Chưa chọn trạng thái',
             'status.in' => 'Trạng thái không hợp lệ',
+            'price.numeric' => 'Giá phải là số',
+            'date.required' => 'Ngày chiếu không được bỏ trống',
+            'date.date' => 'Ngày chiếu không hợp lệ'
         ];
 
         $this->validate($request, [
             'movie_id' => 'required|exists:movies,movie_id',
             'time_slot_id' => 'required|exists:time_slots,time_slot_id',
             'room_id' => 'required|exists:rooms,room_id',
-            'status' => 'required:|in:active,inactive'
+            'status' => 'required|in:active,inactive',
+            'price' => 'nullable|numeric',
+            'date' => 'required|date',
         ], $messages);
         
         $data = $request->all();
@@ -151,18 +156,26 @@ class ShowController extends Controller
         }
 
         $messages = [
-            'name.required' => 'Tên không được bỏ trống',
-            'name.string' => 'Tên phải là chuỗi kí tự',
-            'total_seat.required' => 'Số ghế không được bỏ trống',
-            'total_seat.integer' => 'Số ghê phải là số nguyên',
-            'seat_id.required' => 'Mã ghế không được bỏ trống',
-            'seat_id.exists' => 'Mã ghế không hợp lệ'
+            'movie_id.required' => 'Mã phim không được bỏ trống',
+            'movie_id.exists' => 'Mã phim không hợp lệ',
+            'time_slot_id.required' => 'Mã khung giờ không được bỏ trống',
+            'time_slot_id.exists' => 'Mã khung giờ không hợp lệ',
+            'room_id.required' => 'Mã phòng không được bỏ trống',
+            'room_id.exists' => 'Mã phòng không hợp lệ',
+            'status.required' => 'Chưa chọn trạng thái',
+            'status.in' => 'Trạng thái không hợp lệ',
+            'price.numeric' => 'Giá phải là số',
+            'date.required' => 'Ngày chiếu không được bỏ trống',
+            'date.date' => 'Ngày chiếu không hợp lệ'
         ];
 
         $this->validate($request, [
-            'name' => 'required|string',
-            'total_seat' => 'required|integer',
-            'seat_id' => 'required|exists:seats,seat_id'
+            'movie_id' => 'required|exists:movies,movie_id',
+            'time_slot_id' => 'required|exists:time_slots,time_slot_id',
+            'room_id' => 'required|exists:rooms,room_id',
+            'status' => 'required|in:active,inactive',
+            'price' => 'nullable|numeric',
+            'date' => 'required|date',
         ], $messages);
 
         $data = $request->all();

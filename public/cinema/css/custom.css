@@ -1,0 +1,26 @@
+.card , .list-menu {
+  background: transparent !important;
+  border: 1px solid #5560ff;
+}
+
+.list-group-item-action {
+  background: transparent !important;
+  color: #fff;
+  border-bottom: 1px solid #2d4186;
+}
+
+table {
+  border: 1px solid #5560ff;
+}
+
+table th {
+  border-bottom: 1px solid #2d4186;
+}
+
+table tbody > tr > td {
+  border-bottom: 1px solid #2d4186;
+}
+
+table thead{
+  border:1px solid blue;
+}

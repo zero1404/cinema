@@ -29,7 +29,7 @@
 
                     @auth
                         <li>
-                            <a href="{{ route('cinema.contact') }}" class="{{Route::currentRouteName() == 'cinema.contact' ? 'active' : ''}}">Liên Hệ</a>
+                            <a href="{{ route('cinema.profile') }}" class="{{Route::currentRouteName() == 'cinema.contact' ? 'active' : ''}}">{{ Auth::user()->fullname }}</a>
                         </li>
                         <li>
                             <a href="javascript:void(0)" onclick="event.preventDefault();

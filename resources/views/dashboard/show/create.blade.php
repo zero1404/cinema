@@ -46,10 +46,21 @@ $columns = [
      </div>
    </div>
    
-    <x-Dashboard.Forms.Select name="Trạng thái" property="status">
-      <option value="active" {{ old('status') == 'active' ? 'selected' : '' }}>Đang chiếu</option>
-      <option value="inactive" {{ old('status') == 'inactive' ? 'selected' : '' }}>Dừng chiếu</option>
-    </x-Dashboard.Forms.Select>
+   <x-Dashboard.Forms.Input name="Giá" property="price" type="text" placeholder="Nhập giá" value="{{ old('price') ?? 0 }}" />
+   
+   <div class="row">
+     <div class="col">
+      <x-Dashboard.Forms.Select name="Trạng thái" property="status">
+        <option value="active" {{ old('status') == 'active' ? 'selected' : '' }}>Đang chiếu</option>
+        <option value="inactive" {{ old('status') == 'inactive' ? 'selected' : '' }}>Dừng chiếu</option>
+      </x-Dashboard.Forms.Select>
+     </div>
+
+     <div class="col">
+         <x-Dashboard.Forms.InputDate name="Ngày" property="date" :value="old('date')" />.
+    </div>
+  
+   </div>
   </x-Dashboard.Forms.FormCreate>
 </div>
 

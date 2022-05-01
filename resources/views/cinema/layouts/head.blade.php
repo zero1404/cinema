@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="{{ asset('cinema/css/jquery.animatedheadline.css') }}">
     <link rel="stylesheet" href="{{ asset('cinema/css/notyf.min.css') }}">
     <link rel="stylesheet" href="{{ asset('cinema/css/main.css') }}">
+    <link rel="stylesheet" href="{{ asset('cinema/css/custom.css') }}">
 
     <link rel="shortcut icon" href="{{ asset('cinema/images/favicon.png') }}" type="image/x-icon">
 

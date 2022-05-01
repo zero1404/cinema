@@ -21,14 +21,6 @@ $breadcrumbs = [
   <x-Dashboard.Shared.Breadcrumb :breadcrumbs="$breadcrumbs" />
   <x-Dashboard.Forms.FormCreate name="Phòng" route="room.store">
     <x-Dashboard.Forms.Input name="Tên" property="name" type="text" placeholder="Nhập tên" value="{{ old('name') }}" />
-
-    <x-Dashboard.Forms.Select name="Loại ghế" property="seat_id">
-      @foreach ($seats as $seat)
-      <option value="{{ $seat->seat_id }}" {{ $seat->seat_id === old('seat_id') ? 'selected' : '' }}>{{ $seat->name }}</option>
-      @endforeach
-    </x-Dashboard.Forms.Select>
-
-    <x-Dashboard.Forms.Input name="Số ghế" property="total_seat" type="number" placeholder="Nhập số ghế" value="{{ old('total_seat') }}" />
   </x-Dashboard.Forms.FormCreate>
 </div>
 @endsection

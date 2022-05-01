@@ -12,9 +12,9 @@
             </div>
             <div class="tab-area">
                 <div class="tab-item active">
-                    <form class="ticket-search-form">
+                    <form class="ticket-search-form" method="GET" action="{{ route('cinema.movie.search') }}">
                         <div class="form-group large">
-                            <input type="text" placeholder="Nhập tên phim">
+                            <input type="text" name="keyword" placeholder="Nhập tên phim">
                             <button type="submit"><i class="fas fa-search"></i></button>
                         </div>
                     </form>
